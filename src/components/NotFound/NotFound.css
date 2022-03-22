@@ -1,0 +1,33 @@
+.wrapper-errorPage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 20px;
+    color: rgba(0,0,0, .5);
+}
+
+.wrapper-errorPage > a {
+    text-decoration: none;
+    color: rgba(0,0,0, .5);
+}
+
+.wrapper-errorPage-mobile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+.pipe {
+    font-size: 30px;
+}
+
+@media screen and (max-width: 400px)  {
+    .wrapper-errorPage{
+        gap: 10px;
+        flex-direction: column;
+    }
+    .wrapper-errorPage-mobile{
+        gap: 10px;
+    }
+}

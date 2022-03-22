@@ -1,0 +1,48 @@
+.overlay{
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.85); /* Black background with opacity */
+    z-index: 10; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+
+}
+
+.text {
+    height: 100vh;
+    width: 100%;
+    display:  flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    background-color: transparent;
+    margin-left: 10px;
+  }
+  
+.text > a {
+    font-size: 25px;
+    font-weight: 600;
+    background-color: transparent;
+    color: white;
+    margin-top: 10px;
+    text-decoration: none;
+   
+  }
+.text > a:hover {
+    color: greenyellow;
+  }
+
+.overlayIcons{
+  margin-right: 10px;
+}
+
+@media  screen and (max-width: 500px) {  
+    .overlay{
+        display: block;
+    }
+}
