@@ -1,3 +1,6 @@
+from operator import index
+from pydoc import describe
+from unicodedata import category
 from app import db
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -24,3 +27,21 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.email)
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    category = db.Column(db.String(64), index=True)
+    product = db.relationship('Product', backref='class', lazy='dynamic')
+
+
+class Product(db.Model):
+     id = db.Column(db.Integer(), primary_key=True)
+     description = db.Column(db.String(128), index=True)
+     price = db.Column(db.Integer(), index=True)
+     quantity = db.Column(db.Integer(), index=True)
+     category_id = db.Column(db.Integer(), db.ForeignKey('category.id'), nullable=True)
+    
+
+
+

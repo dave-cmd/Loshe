@@ -4,7 +4,7 @@ from app import app, db
 from flask import jsonify, request
 import time
 import secrets
-from app.models import User, Role
+from app.models import User, Role, Category, Product
 
 @app.route('/api/time')
 def get_current_time():
@@ -69,3 +69,11 @@ def signup():
     return jsonify({
         "route": "Sign up!"
     })
+
+@app.route("/api/createStore", methods=['POST'])
+def createStore():
+    pass
+
+@app.route("/api/createInventory", methods=['POST'])
+def createInventory():
+    pass

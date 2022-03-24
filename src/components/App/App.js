@@ -8,6 +8,7 @@ import useToken from "../hooks/useToken"
 import Navigation from "../Navigation/Navigation";
 import CreateStore from "../CreateStore/CreateStore"
 import Overlay from "../Overlay/Overlay";
+import CreateInventory from "../CreateInventory/CreateInventory";
 
 function App() {
   const {token, setToken} = useToken()
@@ -54,6 +55,9 @@ function App() {
             </Route>
             <Route path="/createStore">
               <CreateStore />
+            </Route>
+            <Route path="/createInventory">
+              <CreateInventory />
             </Route>
             <Route path="*">
               <NotFound />

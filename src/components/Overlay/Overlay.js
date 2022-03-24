@@ -19,7 +19,7 @@ const Overlay = ({visible, toggleHamburger, logout})=>{
                     <Link to="/">{homeIcon}  Home</Link>
                     <Link to="/createStore">{createStoreIcon}  Create Store</Link>
                     <Link to="/createInventory">{createInventory}  Create Inventory</Link>
-                    <Link onClick={logout}>{logoutIcon}  Logout</Link>
+                    <Link to="" onClick={logout}>{logoutIcon}  Logout</Link>
                 </div>
         </div>
         

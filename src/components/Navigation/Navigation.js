@@ -15,7 +15,7 @@ const Navigation = ({setToken, toggleHamburger, logout}) => {
                 <p>|</p>
                 <Link to="/createStore">Create Store</Link>
                 <p>|</p>
-                <Link to="/createIventotry">Create Inventory</Link>
+                <Link to="/createInventory">Create Inventory</Link>
                 <p>|</p>
                 <li onClick={logout}>Logout</li>
             </ul>
