@@ -1,7 +1,7 @@
 import "./CreateInventory.css"
-import { useState } from "react";
-const CreateInventory = () => {
+import { useEffect, useState } from "react";
 
+const CreateInventory = () => {
     const[count, setCount] = useState(1);
     const[form, setForm] = useState({
         productname: "",
@@ -10,6 +10,7 @@ const CreateInventory = () => {
         quantity: "",
         category: ""
     });
+
 
     //Progressive form handler
     const progressiveHandler = ()=>{
@@ -28,13 +29,37 @@ const CreateInventory = () => {
     //Submit form data
     const submitHandler = (event)=>{
         event.preventDefault();
-        console.warn(form);
+
+        fetch("/api/createInventory", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(form)
+        })
+        .then(res=>{
+            if(!res.ok){
+                throw Error("Error encountered in posting Inventory.");
+            }
+            return res.json();
+        })
+        .then(data=>{
+            console.log(data);
+            setForm({
+                productname: "",
+                description: "",
+                price: "",
+                quantity: "",
+                category: ""
+            });
+        })
+        .catch(e=>{
+            console.warn(e.message);
+        })
     }
 
     return ( 
         <div className="wrapper-create-store">
         <h2 className="main-title">Create Inventory</h2>
-        <form>
+        <form onSubmit={submitHandler}>
             {count === 1 &&
             (<div className="form1">
                     {/* <img className="image" src={Create}/> */}
@@ -42,7 +67,7 @@ const CreateInventory = () => {
                         <input 
                             type="text" 
                             name="productname" 
-                            required=""
+                            required
                             placeholder="Product name..."
                             value={form.productname}
                             onChange={changeHandler} />
@@ -52,7 +77,7 @@ const CreateInventory = () => {
                             type="text" 
                             name="description"
                             placeholder="Description..." 
-                            required=""
+                            required
                             value={form.description}
                             onChange={changeHandler} />
                     </div> 
@@ -90,15 +115,16 @@ const CreateInventory = () => {
                             <option value="Style & Fashion">Style & Fashion</option>
                             <option value="Sports">Sports</option>
                             <option value="Medical health">Medical health</option>
+                            <option value="Foods & Beverages">Food & Beverages</option>
                             <option value="Electronics">Electronics</option>
+
                         </select>
                     </div> 
 
             </div>) }
-
-
-            {count === 1 && <button className="btn next" onClick={progressiveHandler}>Next</button>}
-            {count === 2 && <button className="btn submit" onClick={submitHandler}>Submit</button>}
+            
+            {count === 1 && <button className="btn next" onClick={progressiveHandler}>Next</button> }
+            {count === 2 && <button type="submit" className="btn submit" >Submit</button> }
         </form>
     </div>
      );

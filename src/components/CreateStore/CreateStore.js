@@ -29,8 +29,8 @@ const CreateStore = () => {
 
     //Submit form data
     const submitHandler = (event)=>{
-        event.preventDefault()
-        console.warn("Submitted!");
+        event.preventDefault();
+        console.log(form)
     }
 
     return ( 
@@ -44,7 +44,7 @@ const CreateStore = () => {
                                 <input 
                                     type="text" 
                                     name="storename" 
-                                    required=""
+                                    required
                                     value={form.storename}
                                     placeholder="Store name..."
                                     onChange={changeHandler} />
@@ -54,7 +54,7 @@ const CreateStore = () => {
                                     type="text" 
                                     name="region"
                                     placeholder="Region..." 
-                                    required=""
+                                    required
                                     value={form.region}
                                     onChange={changeHandler} />
                             </div> 
@@ -68,7 +68,7 @@ const CreateStore = () => {
                                 <input 
                                     type="text" 
                                     name="manager" 
-                                    required=""
+                                    required
                                     value={form.manager}
                                     placeholder="Manager's name..."
                                     onChange={changeHandler} />
@@ -78,14 +78,14 @@ const CreateStore = () => {
                                     type="text" 
                                     name="password"
                                     placeholder="Manager's password..." 
-                                    required=""
+                                    required
                                     value={form.password}
                                     onChange={changeHandler} />
                             </div> 
                             <div className="inp">
                                 <select
                                     name="permission"
-                                    required=""
+                                    required
                                     value={form.permission}
                                     onChange={changeHandler}>
                                     <option value="">Select manager permissions ...</option>
@@ -98,7 +98,7 @@ const CreateStore = () => {
 
 
                     {count === 1 && <button className="btn next" onClick={progressiveHandler}>Next</button>}
-                    {count === 2 && <button className="btn submit" onClick={submitHandler}>Submit</button>}
+                    {count === 2 && <button className="btn submit" onSubmit={submitHandler}>Submit</button>}
                 </form>
             </div>
      );

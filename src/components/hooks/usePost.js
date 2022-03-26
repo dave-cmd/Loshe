@@ -33,7 +33,7 @@ const usePost = (payload, url) => {
         //cleanup function to terminate the fetch request
         return abortController.abort();
     },[payload, url]);
-    return ( res, error );
+    return ({res, error});
 }
 
 export default usePost;

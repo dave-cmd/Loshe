@@ -37,6 +37,7 @@ class Category(db.Model):
 
 class Product(db.Model):
      id = db.Column(db.Integer(), primary_key=True)
+     productname = db.Column(db.String(256), index=True)
      description = db.Column(db.String(128), index=True)
      price = db.Column(db.Integer(), index=True)
      quantity = db.Column(db.Integer(), index=True)
