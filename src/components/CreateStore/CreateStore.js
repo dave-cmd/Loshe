@@ -8,7 +8,10 @@ const CreateStore = () => {
     const[form, setForm] = useState({
         storename: "",
         region: "",
-        manager: "",
+        firstname: "",
+        lastname: "",
+        phone: "",              
+        email: "",
         password: "",
         permission: ""
     });
@@ -30,13 +33,39 @@ const CreateStore = () => {
     //Submit form data
     const submitHandler = (event)=>{
         event.preventDefault();
-        console.log(form)
+        fetch("/api/createStore", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(form)
+        })
+        .then(res=>{
+            if(!res.ok){
+                throw Error("Error encountered in posting Store.");
+            }
+            return res.json();
+        })
+        .then(data=>{
+            console.log(data);
+            setForm({
+                storename: "",
+                region: "",
+                firstname: "",
+                lastname: "",
+                phone: "",              
+                email: "",
+                password: "",
+                permission: ""
+            });
+        })
+        .catch(e=>{
+            console.warn(e.message);
+        })
     }
 
     return ( 
             <div className="wrapper-create-store">
                 <h2 className="main-title">Create Store</h2>
-                <form>
+                <form onSubmit={submitHandler}> 
                     {count === 1 &&
                     (<div className="form1">
                             <img className="image" src={Create}/>
@@ -57,6 +86,24 @@ const CreateStore = () => {
                                     required
                                     value={form.region}
                                     onChange={changeHandler} />
+                            </div>
+                            <div className="inp">
+                                <input 
+                                    type="text" 
+                                    name="firstname"
+                                    placeholder="Manager's firstname..." 
+                                    required
+                                    value={form.firstname}
+                                    onChange={changeHandler} />
+                            </div> 
+                            <div className="inp">
+                                <input 
+                                    type="text" 
+                                    name="lastname"
+                                    placeholder="Manager's lastname..." 
+                                    required
+                                    value={form.lastname}
+                                    onChange={changeHandler} />
                             </div> 
 
                     </div>) }
@@ -66,11 +113,21 @@ const CreateStore = () => {
                             <img className="image" src={Manager}/>
                             <div className="inp">
                                 <input 
-                                    type="text" 
-                                    name="manager" 
+                                    type="tel" 
+                                    name="phone"
+                                    placeholder="Manager's phone..." 
                                     required
-                                    value={form.manager}
-                                    placeholder="Manager's name..."
+                                    value={form.phone}
+                                    onChange={changeHandler} />
+                            </div> 
+
+                            <div className="inp">
+                                <input 
+                                    type="email" 
+                                    name="email" 
+                                    required
+                                    value={form.email}
+                                    placeholder="Manager's email..."
                                     onChange={changeHandler} />
                             </div>
                             <div className="inp">
@@ -98,7 +155,7 @@ const CreateStore = () => {
 
 
                     {count === 1 && <button className="btn next" onClick={progressiveHandler}>Next</button>}
-                    {count === 2 && <button className="btn submit" onSubmit={submitHandler}>Submit</button>}
+                    {count === 2 && <button className="btn submit" >Submit</button>}
                 </form>
             </div>
      );

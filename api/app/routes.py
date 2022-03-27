@@ -1,4 +1,5 @@
 
+import email
 import json
 import re
 from unicodedata import category
@@ -7,7 +8,7 @@ from app import app, db
 from flask import jsonify, request
 import time
 import secrets
-from app.models import User, Role, Category, Product
+from app.models import User, Role, Category, Product, Store
 
 @app.route('/api/time')
 def get_current_time():
@@ -72,12 +73,6 @@ def signup():
     return jsonify({
         "route": "Sign up!"
     })
-
-@app.route("/api/createStore", methods=['POST'])
-def createStore():
-    if request.method == 'POST':
-        data = request.get_json()
-        print(data)
 
 
 @app.route("/api/createInventory", methods=['POST', 'GET'])
@@ -146,5 +141,77 @@ def createInventory():
             
             
     return jsonify({
-        "route": "Sign up!"
+        "route": "Create Inventory!"
+    })
+
+
+@app.route("/api/createStore", methods=['POST', 'GET'])
+def createStore():
+
+    if request.method == 'POST':
+        #Form json data
+        json_data = request.get_json()
+
+        #Product and Category instances
+        store = Store.query.filter_by(storename=json_data["storename"]).first()
+        store_manager = User.query.filter_by(email=json_data["email"]).first() or User.query.filter_by(phone=json_data["phone"]).first()
+
+        if store != None:
+            print("Store already exists!")
+            return jsonify({
+                "Error": "A store with that name already exists."
+            })
+
+        elif store == None and store_manager == None:
+            #Store manager instance
+            manager = User(
+                firstname = json_data['firstname'],
+                lastname = json_data['lastname'],
+                email = json_data['email'],
+                phone = json_data['phone']
+            )
+
+            manager.set_password(json_data['password'])
+
+            #Product instance
+            post_store = Store(
+                    storename = json_data["storename"],
+                    region = json_data["region"],
+
+            )
+
+            manager.store.append(post_store)
+            # post_store.product.append(post_product)
+
+            db.session.add(manager)
+            db.session.add(post_store)
+            db.session.commit()
+            print("Successfully added store & manager")
+
+            return jsonify({
+                "status": 200
+            })
+
+        elif store == None and store_manager != None:
+            #Product instance
+            post_store = Store(
+                storename = json_data['storename'],
+                region= json_data['region']
+            )
+
+            #Append Store instance to User instance backref
+            store_manager.store.append(post_store)
+            
+            #Stage and commit 
+            db.session.add(post_store)
+            db.session.commit()
+            print("Successfully added store to an existin manager!")
+
+            return jsonify({
+                "status": 200
+            })
+            
+            
+    return jsonify({
+        "route": "Create Store!"
     })
