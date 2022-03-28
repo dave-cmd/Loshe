@@ -9,6 +9,8 @@ import Navigation from "../Navigation/Navigation";
 import CreateStore from "../CreateStore/CreateStore"
 import Overlay from "../Overlay/Overlay";
 import CreateInventory from "../CreateInventory/CreateInventory";
+import Inventory from "../Inventory/Inventory";
+import Staff from "../Staff/Staff";
 
 function App() {
   const {token, setToken} = useToken()
@@ -58,6 +60,12 @@ function App() {
             </Route>
             <Route path="/createInventory">
               <CreateInventory />
+            </Route>
+            <Route path="/getInventory">
+              <Inventory />
+            </Route>
+            <Route path="/getStaff">
+              <Staff />
             </Route>
             <Route path="*">
               <NotFound />

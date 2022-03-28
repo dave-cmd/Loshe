@@ -9,6 +9,31 @@ from flask import jsonify, request
 import time
 import secrets
 from app.models import User, Role, Category, Product, Store
+from app.schema import UserSchema, RoleSchema, CategorySchema, ProductSchema, StoreSchema 
+
+#Init Schema
+
+#User
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
+
+#Role
+role_schema = RoleSchema()
+roles_schema = RoleSchema(many=True)
+
+#Category
+category_schema = CategorySchema()
+categories_schema = CategorySchema(many=True)
+
+#Product
+product_schema = ProductSchema()
+products_schema = ProductSchema(many=True)
+
+#Store
+store_schema = StoreSchema()
+stores_schema = StoreSchema(many=True)
+
+
 
 @app.route('/api/time')
 def get_current_time():
@@ -215,3 +240,25 @@ def createStore():
     return jsonify({
         "route": "Create Store!"
     })
+
+
+@app.route("/api/getStaff", methods=['GET', 'POST'])
+def getStaff():
+    if request.method == 'GET':
+        #Get all staff
+        users = User.query.all()
+        result = users_schema.dump(users)
+
+        # serialize the AppenderBaseQueryProperty
+        for user in result:
+            if len(list(user['store']) ) <= 1:
+                user['store'] = user_schema.dump(user['store'])
+            elif len(list(user['store']) ) > 1:
+                user['store'] = users_schema.dump(user['store'])
+        
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getStaff"
+        })

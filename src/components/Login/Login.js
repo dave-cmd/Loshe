@@ -57,7 +57,7 @@ const Login = ({setToken}) => {
     return (
         <>
         {visible.login === true &&   <div className="login-wrapper">
-                <h1>Login In</h1> 
+                <h1>Login</h1> 
                 <form onSubmit={submitHandler}>
                     <label>
                         <p>Email</p>
