@@ -11,6 +11,7 @@ import Overlay from "../Overlay/Overlay";
 import CreateInventory from "../CreateInventory/CreateInventory";
 import Inventory from "../Inventory/Inventory";
 import Staff from "../Staff/Staff";
+import StaffDetails from "../StaffDetails/StaffDetails";
 
 function App() {
   const {token, setToken} = useToken()
@@ -66,6 +67,9 @@ function App() {
             </Route>
             <Route path="/getStaff">
               <Staff />
+            </Route>
+            <Route path="/staff/:id">
+              <StaffDetails />
             </Route>
             <Route path="*">
               <NotFound />

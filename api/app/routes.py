@@ -3,6 +3,7 @@ import email
 import json
 import re
 from unicodedata import category
+from unittest import result
 from urllib import response
 from app import app, db
 from flask import jsonify, request
@@ -262,3 +263,16 @@ def getStaff():
         return jsonify({
         "route": "getStaff"
         })
+
+
+@app.route("/api/staff/<int:id>", methods=['GET', 'POST'])
+def staff(id):
+    if request.method == 'GET':
+        user = User.query.filter_by(id=id).first()
+        user = user_schema.dump(user)
+        if len(list(user['store']) ) <= 1:
+            user['store'] = user_schema.dump(user['store'])
+        elif len(list(user['store']) ) > 1:
+            user['store'] = users_schema.dump(user['store'])
+        print(user)
+    return jsonify(user)

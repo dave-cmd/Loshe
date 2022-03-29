@@ -17,14 +17,23 @@
     justify-content: center;
 }
 
-.staff-element {
+.staff-element {                 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 300px;
     height: 100px;
     border-radius: 5px;
-    padding: 8px;
+    padding: 10px;
+    color: rgba(0,0,0,0.6);
     background-color: rgba(255,255,255, 0.2);
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
+
+.staff-link {
+    text-decoration: none;
+}
+
 
 @media screen and (max-width: 800px) {
     .staff-list{
@@ -37,7 +46,7 @@
     
     .staff-element {
         width: 300px;
-        height: 100px;
+        height: 80px;
         border-radius: 5px;
         background-color: rgba(255,255,255, 0.2);
     }
@@ -54,7 +63,7 @@
     
     .staff-element {
         width: 300px;
-        height: 100px;
+        height: 60px;
         border-radius: 5px;
         background-color: rgba(255,255,255, 0.2);
     }
