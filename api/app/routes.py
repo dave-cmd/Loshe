@@ -1,10 +1,5 @@
 
-import email
-import json
-import re
-from unicodedata import category
-from unittest import result
-from urllib import response
+from crypt import methods
 from app import app, db
 from flask import jsonify, request
 import time
@@ -180,7 +175,11 @@ def createStore():
 
         #Product and Category instances
         store = Store.query.filter_by(storename=json_data["storename"]).first()
-        store_manager = User.query.filter_by(email=json_data["email"]).first() or User.query.filter_by(phone=json_data["phone"]).first()
+        store_manager = User.query.filter_by(email=json_data["email"]).first()
+        store_manager_phone = User.query.filter_by(phone=json_data["phone"]).first()
+
+        #roles
+        user_role = Role.query.filter_by(role=json_data['permission']).first()
 
         if store != None:
             print("Store already exists!")
@@ -188,7 +187,7 @@ def createStore():
                 "Error": "A store with that name already exists."
             })
 
-        elif store == None and store_manager == None:
+        elif store == None and store_manager == None and store_manager_phone == None:
             #Store manager instance
             manager = User(
                 firstname = json_data['firstname'],
@@ -205,7 +204,8 @@ def createStore():
                     region = json_data["region"],
 
             )
-
+            if user_role != None:
+                user_role.user.append(manager)
             manager.store.append(post_store)
             # post_store.product.append(post_product)
 
@@ -215,7 +215,7 @@ def createStore():
             print("Successfully added store & manager")
 
             return jsonify({
-                "status": 200
+                "status": "Resource created 1."
             })
 
         elif store == None and store_manager != None:
@@ -228,21 +228,43 @@ def createStore():
             #Append Store instance to User instance backref
             store_manager.store.append(post_store)
             
+            if user_role != None:
+                user_role.user.append(store_manager)
+
             #Stage and commit 
             db.session.add(post_store)
             db.session.commit()
-            print("Successfully added store to an existin manager!")
+            print("Successfully added store to an existing manager!")
 
             return jsonify({
-                "status": 200
+                "status": "Resource Created 2!"
             })
-            
-            
+
+        elif store == None and store_manager_phone != None:
+            #Product instance
+            post_store = Store(
+                storename = json_data['storename'],
+                region= json_data['region']
+            )
+
+            #Append Store instance to User instance backref
+            store_manager_phone.store.append(post_store)
+            user_role.user.append(store_manager)
+
+            #Stage and commit 
+            db.session.add(post_store)
+            db.session.commit()
+            print("Successfully added store to an existing manager phone!")
+
+            return jsonify({
+                "status": "Resource Created 3!"
+            })
+
     return jsonify({
         "route": "Create Store!"
     })
 
-
+#Get staff
 @app.route("/api/getStaff", methods=['GET', 'POST'])
 def getStaff():
     if request.method == 'GET':
@@ -265,14 +287,169 @@ def getStaff():
         })
 
 
+#Get staff by Id
 @app.route("/api/staff/<int:id>", methods=['GET', 'POST'])
 def staff(id):
     if request.method == 'GET':
         user = User.query.filter_by(id=id).first()
         user = user_schema.dump(user)
         if len(list(user['store']) ) <= 1:
-            user['store'] = user_schema.dump(user['store'])
+            user['store'] = store_schema.dump(user['store'])
         elif len(list(user['store']) ) > 1:
-            user['store'] = users_schema.dump(user['store'])
-        print(user)
+            user['store'] = stores_schema.dump(user['store'])
+            print(stores_schema.dump(user['store']))
+        # print(user)
     return jsonify(user)
+
+
+#Get role by Id
+@app.route("/api/role/<int:id>", methods=['GET', 'POST'])
+def role(id):
+    if request.method == 'GET':
+        role_inst = Role.query.filter_by(id=id).first()
+        if role_inst != None:
+            res = { 'role' : role_inst.role }
+            return jsonify(res)
+        else:
+            return jsonify({
+                'role': None
+            })
+    else:
+        return jsonify(
+            {
+            'route': 'get role!'
+            }
+        )
+
+#Get roles
+@app.route("/api/getRoles", methods=['GET', 'POST'])
+def getRoles():
+    if request.method == 'GET':
+        #Get all roles
+        roles = Role.query.all()
+        result = roles_schema.dump(roles)
+
+        # serialize the AppenderBaseQueryProperty
+        for role in result:
+            if len(list(role['user']) ) <= 1:
+                role['user'] = role_schema.dump(role['user'])
+            elif len(list(role['user']) ) > 1:
+                role['user'] = roles_schema.dump(role['user'])
+        
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getRoles"
+        })
+
+
+#Get category
+@app.route("/api/category/<int:id>", methods=['GET', 'POST'])
+def category(id):
+    if request.method == 'GET':
+        category_inst = Category.query.filter_by(id=id).first()
+        if category_inst != None:
+            res = { 'category' : category_inst.category }
+            return jsonify(res)
+        else:
+            return jsonify({
+                'category': None
+            })
+    else:
+        return jsonify(
+            {
+            'route': 'get category!'
+            }
+        )
+
+#Get categories
+@app.route('/api/getCategories', methods=['GET', 'POST'])
+def getCategories():
+    if request.method == 'GET':
+        #Get all categories
+        categories = Category.query.all()
+        result = categories_schema.dump(categories)
+
+        # serialize the AppenderBaseQueryProperty
+        for category in result:
+            if len(list(category['product']) ) <= 1:
+                category['product'] = user_schema.dump(category['product'])
+            elif len(list(category['product']) ) > 1:
+                category['product'] = users_schema.dump(category['product'])
+        
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getCategories"
+        })
+
+#Get product
+@app.route("/api/product/<int:id>", methods=['GET', 'POST'])
+def product(id):
+    if request.method == 'GET':
+        product_inst = Product.query.filter_by(id=id).first()
+        if product_inst != None:
+            res = { 'product' : product_inst.productname }
+            return jsonify(res)
+        else:
+            return jsonify({
+                'product': None
+            })
+    else:
+        return jsonify(
+            {
+            'route': 'get product!'
+            }
+        )
+
+#Get products
+
+@app.route("/api/getProducts", methods=['GET', 'POST'])
+def getProducts():
+    if request.method == 'GET':
+        #Get all staff
+        products = Product.query.all()
+        result = products_schema.dump(products)
+        
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getProducts"
+        })
+
+#Get store
+@app.route("/api/store/<int:id>", methods=['GET', 'POST'])
+def store(id):
+    if request.method == 'GET':
+        store_inst = Store.query.filter_by(id=id).first()
+        if store_inst != None:
+            res = { 'store' : store_inst.storename }
+            return jsonify(res)
+        else:
+            return jsonify({
+                'store': None
+            })
+    else:
+        return jsonify(
+            {
+            'route': 'get store!'
+            }
+        )
+
+#Gef stores
+@app.route("/api/getStores")
+def getStore():
+    if request.method == 'GET':
+        #Get all Stores
+        stores = Store.query.all()
+        result = stores_schema.dump(stores)
+        
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getStores"
+        })

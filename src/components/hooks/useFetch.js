@@ -3,6 +3,7 @@ import {useState, useEffect} from "react"
 const useFetch = (url)=>{
     const[data, setData] = useState([])
     const [error, setError] = useState(null)
+    const [isFetching, setIsFetching] = useState(true)
 
     useEffect(()=>{
         //Abort controller
@@ -18,6 +19,7 @@ const useFetch = (url)=>{
                 })
                 .then(data=>{
                     setData(data)
+                    setIsFetching(false)
                 })
                 .catch(err=>{
                     if (err.name === "AbortError"){
@@ -35,7 +37,7 @@ const useFetch = (url)=>{
     }
     },[url])
     
-    return {data, error, setData}
+    return {data, error, isFetching, setData}
 }
 
 export default useFetch;

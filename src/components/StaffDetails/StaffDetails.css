@@ -172,15 +172,25 @@
 
     .phone-details{
         width: 100%;
-        margin-left: 20px;
-    
+        margin-left: 20px; 
+        margin-left: 50px;   
     }
 
     .email-details {
         width: 100%;
-        margin-left: 20px;
+        margin-left: 50px;
     }
+}
 
-    
+@media screen and (min-width:500px ) {
 
+.phone-details{
+    justify-content: center;
+    align-items: center;
+
+}
+.email-details{
+    justify-content: center;
+    align-items: center;
+}
 }
