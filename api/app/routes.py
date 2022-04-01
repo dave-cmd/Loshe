@@ -35,6 +35,7 @@ stores_schema = StoreSchema(many=True)
 def get_current_time():
     return {'time': time.time()}
 
+#Login
 @app.route("/api/login", methods=['POST', 'GET'])
 def login():
 
@@ -55,6 +56,7 @@ def login():
         "user": "This user does not exist!"
         })
 
+#Sigup
 @app.route("/api/signup", methods=['POST', 'GET'])
 def signup():
 
@@ -95,7 +97,7 @@ def signup():
         "route": "Sign up!"
     })
 
-
+#Create Inventory
 @app.route("/api/createInventory", methods=['POST', 'GET'])
 def createInventory():
 
@@ -165,7 +167,7 @@ def createInventory():
         "route": "Create Inventory!"
     })
 
-
+#Create Store
 @app.route("/api/createStore", methods=['POST', 'GET'])
 def createStore():
 
@@ -405,7 +407,6 @@ def product(id):
         )
 
 #Get products
-
 @app.route("/api/getProducts", methods=['GET', 'POST'])
 def getProducts():
     if request.method == 'GET':
@@ -453,3 +454,90 @@ def getStore():
         return jsonify({
         "route": "getStores"
         })
+
+
+#Delete staff
+@app.route("/api/deleteStaff/<int:id>", methods=['DELETE', 'GET'])
+def deleteStaff(id):
+    if request.method == 'DELETE':
+        staff = User.query.get(id)
+        db.session.delete(staff)
+        db.session.commit()
+        return jsonify({
+            "res": 200
+        })
+
+    return jsonify({
+        "route": "deleteStaff"
+    })
+
+#Delete inventory
+@app.route("/api/deleteInventory/<int:id>", methods=['DELETE', 'GET'])
+def deleteInventory(id):
+    if request.method == 'DELETE':
+        product = Product.query.get(id)
+        db.session.delete(product)
+        db.session.commit()
+        return jsonify({
+            "res": 200
+        })
+
+    return jsonify({
+        "route": "deleteInventory"
+    })
+
+#Delete store
+@app.route("/api/deleteStore/<int:id>", methods=['DELETE', 'GET'])
+def deleteStore(id):
+    if request.method == 'DELETE':
+        store = Store.query.get(id)
+        db.session.delete(store)
+        db.session.commit()
+        return jsonify({
+            "res": 200
+        })
+
+    return jsonify({
+        "route": "deleteStore"
+    })
+
+#Update staff
+@app.route("/api/updateStaff/<int:id>", methods=['PATCH', 'GET'])
+def updateStaff(id):
+    #Get the form data
+    form_data = request.get_json()
+    if request.method == 'PATCH':
+        staff = User.query.get(id)
+        
+        staff.firstname = form_data['firstname']
+        staff.lastname = form_data['lastname']
+        staff.email = form_data['email']
+        staff.role_id = Role.query.filter_by(role=form_data['role']).first().id
+
+        if form_data["password"] != "":
+            staff.set_password(form_data['password'])
+
+        #stores
+        stores_names_list = form_data['store'].split(",")
+        # print("**************")
+        # print("**************")
+
+        #check if stores in database by storename
+        fetched_stores = []
+        for s in stores_names_list:
+            s = s.strip()
+            st = Store.query.filter_by(storename=s).first()
+
+            if st != None:
+                fetched_stores.append(st)
+        
+        #Append stores to current user instance
+        [staff.store.append(i) for i in fetched_stores]
+
+        db.session.commit()
+        return jsonify({
+            "res": 200
+        })
+    return jsonify({
+        "route": "deleteStaff"
+    })

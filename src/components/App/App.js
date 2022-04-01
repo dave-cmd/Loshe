@@ -12,22 +12,24 @@ import CreateInventory from "../CreateInventory/CreateInventory";
 import Inventory from "../Inventory/Inventory";
 import Staff from "../Staff/Staff";
 import StaffDetails from "../StaffDetails/StaffDetails";
+import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
+import UpdateStaffDetails from "../UpdateStaffDetails/UpdateStaffDetails";
 
 function App() {
   const {token, setToken} = useToken()
+ 
+  //Toggle menu visibility
+  const[menuVisible, setMenuVisible] = useState(false);
 
-  //logout function
+  //Logout function
   const logout = ()=>{
       sessionStorage.clear()
       setToken({
           "token": null
       });
   };
-
-  //toggle menu visibility
-  const[menuVisible, setMenuVisible] = useState(false);
   
-  //toggleHamburger
+  //ToggleHamburger
   const toggleHamburger = ()=>{
     setMenuVisible(prevState=>{
       return !prevState
@@ -52,6 +54,11 @@ function App() {
           <Overlay visible={menuVisible}
                   toggleHamburger={toggleHamburger}
                   logout={logout} />
+          {/* <DeleteOverlay display={displayDeleteOverlay}
+                         setDisplay= {setDisplayDeleteOverlay}
+                         deleteActive={deleteActive}
+                         setDeleteActive={setDeleteActive}/> */}
+
           <Switch>
             <Route path="/" exact>
               <Dashboard />
@@ -70,6 +77,9 @@ function App() {
             </Route>
             <Route path="/staff/:id">
               <StaffDetails />
+            </Route>
+            <Route path="/updateStaffDetails/:id">
+              <UpdateStaffDetails />
             </Route>
             <Route path="*">
               <NotFound />

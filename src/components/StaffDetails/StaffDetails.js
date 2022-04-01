@@ -1,14 +1,29 @@
 import "./StaffDetails.css"
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { Redirect, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import useFetch from "../hooks/useFetch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faPhone, faAt, faL } from '@fortawesome/free-solid-svg-icons'
-import { useEffect, useState } from "react";
+import { faUser, faPhone, faAt } from '@fortawesome/free-solid-svg-icons'
+import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
+import { useState } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+
 
 const StaffDetails = () => {
     const {id} = useParams();
     const{data, error, isFetching} = useFetch('/api/staff/' + id)
 
+    //Delete error
+    const[deleteError, setDeleteError] = useState(false)
+
+    //Instanciate history for redirects
+    const history = useHistory();
+
+    //Toggle deleteOverlay visibility
+    const [displayDeleteOverlay, setDisplayDeleteOverlay] = useState(false)
+
+    //Delete activation
+    const [deleteActive, setDeleteActive] = useState(false)
+   
     //Icons
     const profileIcon = <FontAwesomeIcon className="profileIcon" icon={faUser} />
     const emailIcon = <FontAwesomeIcon className="emailIcon" icon={faAt} />
@@ -16,10 +31,51 @@ const StaffDetails = () => {
 
     //Fetch from roles table
     const {data:role, error: errorRole} = useFetch('/api/role/' + data.role_id)
-    
+
+
+    //Activate delete overlay
+    const activateDeleteOverlay = ()=>{
+        setDisplayDeleteOverlay(!displayDeleteOverlay)
+        console.log("deleteOverlay activated!!!")
+    }
+
+    //Delete staff
+    const deleteStaff = (id) =>{
+        fetch("/api/deleteStaff/" + id, {
+            method: 'DELETE',
+        })
+        .then(res=>{
+            if(!res.ok){
+                throw Error("Error deleting staff memeber");
+            }
+            return res.json()
+        })
+        .then(data=>{
+            console.log(data);
+            setDisplayDeleteOverlay(false);
+            history.push("/getStaff")
+        })
+        .catch(e=>{
+            setDeleteError(e.message)
+            console.log(e.message)
+        })
+    }
+
+    //Redirect to update
+    const redirectToUpdate = ()=>{
+        history.push("/updateStaffDetails/" + id);
+    }
+
+    console.log(deleteActive)
     return ( 
+        
         <div className="wrapper-staff-details">
-            <h1 className="staff-title">Staff Details</h1>
+            <DeleteOverlay display={displayDeleteOverlay}              
+                           setDisplay= {setDisplayDeleteOverlay}
+                           id={id}
+                           deleteStaff={deleteStaff}
+                           deleteError={deleteError}
+                           setDeleteError={setDeleteError}/>
             { data.length === 0 && error === null  && <div className="status">Fetching resource...</div>}
             { isFetching=== false && Object.keys(data).length > 0 && error === null && 
                 (<>
@@ -53,8 +109,8 @@ const StaffDetails = () => {
                         })): (<div>No stores available</div>)}
                     </div>
                     <div className="action-section">
-                        <div className="action update">Delete</div>
-                        <div className="action delete">Update</div>
+                        <div className="action update" onClick={redirectToUpdate}>Update</div>
+                        <div className="action delete" onClick={()=>{activateDeleteOverlay();}}>Delete</div>
                     </div>
                 </>)
             }
