@@ -32,7 +32,6 @@ const StaffDetails = () => {
     //Fetch from roles table
     const {data:role, error: errorRole} = useFetch('/api/role/' + data.role_id)
 
-
     //Activate delete overlay
     const activateDeleteOverlay = ()=>{
         setDisplayDeleteOverlay(!displayDeleteOverlay)
@@ -106,7 +105,7 @@ const StaffDetails = () => {
                                         <div className="font bold">{store.storename}</div>
                                         <div className="font">{store.region}</div>
                                     </div>
-                        })): (<div>No stores available</div>)}
+                        })): typeof data.store === 'object'? (<div>{data.store.storename}</div>): <div>No store available</div>}
                     </div>
                     <div className="action-section">
                         <div className="action update" onClick={redirectToUpdate}>Update</div>

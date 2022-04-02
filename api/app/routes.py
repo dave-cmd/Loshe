@@ -208,13 +208,16 @@ def createStore():
             )
             if user_role != None:
                 user_role.user.append(manager)
+            
+            
             manager.store.append(post_store)
             # post_store.product.append(post_product)
 
             db.session.add(manager)
             db.session.add(post_store)
             db.session.commit()
-            print("Successfully added store & manager")
+            print("Successfully added store & manager----------------")
+            print(user_role.role)
 
             return jsonify({
                 "status": "Resource created 1."
@@ -294,13 +297,31 @@ def getStaff():
 def staff(id):
     if request.method == 'GET':
         user = User.query.filter_by(id=id).first()
-        user = user_schema.dump(user)
-        if len(list(user['store']) ) <= 1:
-            user['store'] = store_schema.dump(user['store'])
-        elif len(list(user['store']) ) > 1:
-            user['store'] = stores_schema.dump(user['store'])
-            print(stores_schema.dump(user['store']))
+        print(len(list(user.store)),"------------")
+        #user = user_schema.dump(user)
+        # if len(list(user['store']) ) <= 1:
+        if len(list(user.store) ) == 0:
+            # user['store'] = store_schema.dump(user['store'])
+            dump_store = store_schema.dump(list(user.store))
+            print(dump_store)
+            # print(user['store'])
+        # elif len(list(user['store']) ) > 1:
+        elif len(list(user.store) ) <= 1:
+            # user['store'] = store_schema.dump(user['store'])
+            dump_store = store_schema.dump(list(user.store)[0])
+            print(dump_store)
+            # print(user['store'])
+        # elif len(list(user['store']) ) > 1:
+        elif len(list(user.store) ) > 1:
+            # user['store'] = stores_schema.dump(user['store'])
+            dump_store = stores_schema.dump(list(user.store))
+            print(dump_store)
+            # print(stores_schema.dump(user['store']))
+        
         # print(user)
+        user = user_schema.dump(user)
+        user['store'] = dump_store
+        
     return jsonify(user)
 
 
@@ -511,33 +532,37 @@ def updateStaff(id):
         
         staff.firstname = form_data['firstname']
         staff.lastname = form_data['lastname']
-        staff.email = form_data['email']
         staff.role_id = Role.query.filter_by(role=form_data['role']).first().id
 
+        #check if phone number already exixts
+        user_phone = User.query.filter_by(phone=form_data['phone']).first()
+        if user_phone == None:
+            staff.email = form_data['email']
+        
+        #check if email already exits
+        user_email = User.query.filter_by(email=form_data['email']).first()
+        if user_email == None:
+            staff.email = form_data['email']
+            
+        #check if password is empty
         if form_data["password"] != "":
             staff.set_password(form_data['password'])
-
+        
         #stores
         stores_names_list = form_data['store'].split(",")
-        # print("**************")
-        # print("**************")
 
         #check if stores in database by storename
-        fetched_stores = []
         for s in stores_names_list:
             s = s.strip()
             st = Store.query.filter_by(storename=s).first()
-
+            print(st)
             if st != None:
-                fetched_stores.append(st)
-        
-        #Append stores to current user instance
-        [staff.store.append(i) for i in fetched_stores]
+                staff.store.append(st) 
 
         db.session.commit()
         return jsonify({
             "res": 200
         })
     return jsonify({
-        "route": "deleteStaff"
+        "route": "updateStaff"
     })

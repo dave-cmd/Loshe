@@ -31,6 +31,7 @@ const UpdateStaffDetails = () => {
     useEffect(()=>{
         if(Array.isArray(data) ===  false){
             console.log("--useEffect--")
+            console.log(data)
 
             //Stringify stores
             let stores_str = ""
@@ -44,6 +45,9 @@ const UpdateStaffDetails = () => {
                         stores_str += ",";
                     }
                 })
+            }
+            else if (typeof data.store === 'object') {
+               stores_str += data.store.storename
             }
 
             setForm({
