@@ -1,5 +1,6 @@
 
 from crypt import methods
+from urllib import response
 from app import app, db
 from flask import jsonify, request
 import time
@@ -109,6 +110,10 @@ def createInventory():
         product = Product.query.filter_by(productname=json_data["productname"]).first()
         product_category = Category.query.filter_by(category=json_data["category"]).first()
 
+        print(json_data)
+        print(product)
+        print(product_category)
+
         if product != None:
             print("Product already exists!")
             return jsonify({
@@ -138,10 +143,10 @@ def createInventory():
             print("Successfully added!")
 
             return jsonify({
-                "status": 200
+                "status1": 200
             })
 
-        elif product_category != None and product_category == None:
+        elif product == None and product_category != None:
             #Product instance
             post_product = Product(
                     productname = json_data["productname"],
@@ -159,10 +164,8 @@ def createInventory():
             print("Successfully added 2!")
 
             return jsonify({
-                "status": 200
-            })
-            
-            
+                "status2": 200
+            })            
     return jsonify({
         "route": "Create Inventory!"
     })
@@ -413,13 +416,9 @@ def getCategories():
 def product(id):
     if request.method == 'GET':
         product_inst = Product.query.filter_by(id=id).first()
-        if product_inst != None:
-            res = { 'product' : product_inst.productname }
-            return jsonify(res)
-        else:
-            return jsonify({
-                'product': None
-            })
+        product_inst = product_schema.dump(product_inst)
+
+        return jsonify(product_inst)
     else:
         return jsonify(
             {
@@ -448,8 +447,8 @@ def store(id):
     if request.method == 'GET':
         store_inst = Store.query.filter_by(id=id).first()
         if store_inst != None:
-            res = { 'store' : store_inst.storename }
-            return jsonify(res)
+            store_inst = store_schema.dump(store_inst)
+            return jsonify(store_inst)
         else:
             return jsonify({
                 'store': None
@@ -566,3 +565,65 @@ def updateStaff(id):
     return jsonify({
         "route": "updateStaff"
     })
+
+#Update product
+@app.route("/api/updateProduct/<int:id>", methods=['PATCH', 'GET'])
+def updateProduct(id):
+    if request.method == 'PATCH':
+        #Get the form data
+        form_data = request.get_json()
+
+        #Query product with id
+        product = Product.query.get(id)
+
+        #Update product:
+        if product != None:
+            product.productname = form_data['productname']
+            product.description = form_data['description']
+            product.price  = form_data['price']
+            product.quantity = form_data['quantity']
+
+            #Query category by categoryname provided
+            category_instance = Category.query.filter_by(category=form_data['category']).first()
+
+            #check if category exists
+            if category_instance != None:
+                product.category_id = category_instance.id
+            
+            db.session.commit()
+
+            return jsonify({
+                "updateProduct": 200
+            })
+    return jsonify({
+            "route": "updateProduct"
+    })
+
+#Update store
+@app.route("/api/updateStore/<int:id>", methods=['PATCH', 'GET'])
+def updateStore(id):
+    if request.method == 'PATCH':
+        #Get form data
+        form_data = request.get_json()
+
+        #Create a store instance
+        store = Store.query.get(id)
+
+        #Update store instance with form data
+        if store!= None:
+            store.storename = form_data['storename']
+            store.region = form_data['region']
+
+        #TODO: Update manager
+
+        #Commit changes to database
+        db.session.commit()
+
+        return jsonify({
+            "updateStore": 200
+        })
+    return jsonify ({
+        "route": "updateStore"
+    })
+
+

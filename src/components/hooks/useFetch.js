@@ -1,8 +1,10 @@
 import {useState, useEffect} from "react"
 
-const useFetch = (url)=>{
+const useFetch = (url, url2)=>{
     const[data, setData] = useState([])
+    const[data2, setData2] = useState([])
     const [error, setError] = useState(null)
+    
     const [isFetching, setIsFetching] = useState(true)
 
     useEffect(()=>{

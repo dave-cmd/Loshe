@@ -2,7 +2,7 @@ import React from "react";
 import "./Overlay.css"
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSignOut, faPlusCircle, faPlusSquare, faHome, faCoins, faUsers} from '@fortawesome/free-solid-svg-icons'
+import { faSignOut, faPlusCircle, faPlusSquare, faHome, faCoins, faUsers, faArchive} from '@fortawesome/free-solid-svg-icons'
 
 const Overlay = ({visible, toggleHamburger, logout})=>{
 
@@ -11,6 +11,7 @@ const Overlay = ({visible, toggleHamburger, logout})=>{
     const createInventory = <FontAwesomeIcon className="overlayIcons" icon={faPlusCircle} />
     const inventory = <FontAwesomeIcon className="overlayIcons" icon={faCoins} />
     const staff = <FontAwesomeIcon className="overlayIcons" icon={faUsers} />
+    const stores = <FontAwesomeIcon className="overlayIcons" icon={faArchive} />
     const homeIcon = <FontAwesomeIcon className="overlayIcons" icon={faHome} />
 
     return(
@@ -23,6 +24,7 @@ const Overlay = ({visible, toggleHamburger, logout})=>{
                     <Link to="/createInventory">{createInventory}  Create Inventory</Link>
                     <Link to="/getStaff">{staff}  Staff</Link>
                     <Link to="/getInventory">{inventory} Inventory</Link>
+                    <Link to="/getStores">{stores} Stores</Link>
                     <Link to="" onClick={logout}>{logoutIcon}  Logout</Link>
                 </div>
         </div>

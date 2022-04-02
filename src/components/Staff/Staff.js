@@ -1,5 +1,4 @@
 import useFetch from "../hooks/useFetch";
-import { useState } from "react";
 import "./Staff.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'

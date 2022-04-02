@@ -12,8 +12,12 @@ import CreateInventory from "../CreateInventory/CreateInventory";
 import Inventory from "../Inventory/Inventory";
 import Staff from "../Staff/Staff";
 import StaffDetails from "../StaffDetails/StaffDetails";
-import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
 import UpdateStaffDetails from "../UpdateStaffDetails/UpdateStaffDetails";
+import InventoryDetails from "../InventoryDetails/InventoryDetails";
+import UpdateInventoryDetails from "../UpdateInventoryDetails/UpdateInventoryDetails"
+import Stores from "../Stores/Stores";
+import StoreDetails from "../StoreDetails/StoreDetails";
+import UpdateStoreDetails from "../UpdateStoreDetails/UpdateStoreDetails"
 
 function App() {
   const {token, setToken} = useToken()
@@ -54,11 +58,6 @@ function App() {
           <Overlay visible={menuVisible}
                   toggleHamburger={toggleHamburger}
                   logout={logout} />
-          {/* <DeleteOverlay display={displayDeleteOverlay}
-                         setDisplay= {setDisplayDeleteOverlay}
-                         deleteActive={deleteActive}
-                         setDeleteActive={setDeleteActive}/> */}
-
           <Switch>
             <Route path="/" exact>
               <Dashboard />
@@ -78,8 +77,23 @@ function App() {
             <Route path="/staff/:id">
               <StaffDetails />
             </Route>
+            <Route path="/inventory/:id">
+              <InventoryDetails />
+            </Route>
+            <Route path="/store/:id">
+              <StoreDetails />
+            </Route>
+            <Route path="/getStores">
+              <Stores />
+            </Route>
             <Route path="/updateStaffDetails/:id">
               <UpdateStaffDetails />
+            </Route>
+            <Route path="/updateInventoryDetails/:id">
+              <UpdateInventoryDetails />
+            </Route>
+            <Route path="/updateStoreDetails/:id">
+              <UpdateStoreDetails />
             </Route>
             <Route path="*">
               <NotFound />
