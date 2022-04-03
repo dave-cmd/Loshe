@@ -15,6 +15,7 @@ const UpdateStoreDetails = () => {
 
     //Fetch store data
     const {data, setError} = useFetch("/api/store/" + id);
+    console.log(Array.isArray(data))
 
     //Form state
     const[form, setForm] = useState({
@@ -24,7 +25,7 @@ const UpdateStoreDetails = () => {
 
     //setFormData
     useEffect(()=>{
-        if (typeof data === 'object') {
+        if (Array.isArray(data) === false) {
             setForm({
                 storename: data.storename,
                 region: data.region,
@@ -33,7 +34,6 @@ const UpdateStoreDetails = () => {
     }
     ,[data])
 
-    
     //Capture form data on change
     const changeHandler = (event)=>{
         const name = event.target.name;

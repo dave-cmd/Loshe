@@ -21,6 +21,8 @@ const Navigation = ({setToken, toggleHamburger, logout}) => {
                 <p>|</p>
                 <Link to="/getStaff">Staff</Link>
                 <p>|</p>
+                <Link to="/getStores">Stores</Link>
+                <p>|</p>
                 <li onClick={logout}>Logout</li>
             </ul>
             <FontAwesomeIcon 

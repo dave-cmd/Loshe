@@ -51,7 +51,7 @@ const Signup = (props) => {
                 <h1>SignUp</h1> 
                 <form onSubmit={submitHandler}>
                 <label>
-                        <p>First Name</p>
+                        <p>Firstname</p>
                         <input type="text"
                             required 
                             onChange={changeHandler}
@@ -59,7 +59,7 @@ const Signup = (props) => {
                             value={signupForm.firstname}/>
                     </label>
                     <label>
-                        <p>Last Name</p>
+                        <p>Lastname</p>
                         <input type="text"
                             required 
                             onChange={changeHandler}
@@ -97,8 +97,9 @@ const Signup = (props) => {
                             value={signupForm.password2} />
                     </label>
                     <div className="buttons">
-                        <button type="submit">Submit</button>
-                        <p onClick={props.toggleForms}>Back to login?</p>
+                        <button type="submit" className="action update">Register</button>
+                        <button type="submit" className="action update" onClick={props.toggleForms}>Login</button>
+                        {/* <p onClick={props.toggleForms}>Back to login?</p> */}
                     </div>
                 </form> 
         </div>

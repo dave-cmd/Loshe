@@ -1,7 +1,12 @@
 import "./CreateInventory.css"
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const CreateInventory = () => {
+
+    //Initialize use history
+    const history = useHistory();
+
     const[count, setCount] = useState(1);
     const[form, setForm] = useState({
         productname: "",
@@ -50,6 +55,9 @@ const CreateInventory = () => {
                 quantity: "",
                 category: ""
             });
+
+            //Redirect on success
+            history.push("/getInventory")
         })
         .catch(e=>{
             console.warn(e.message);

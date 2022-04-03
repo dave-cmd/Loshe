@@ -7,6 +7,10 @@
     color: rgba(0,0,0, 0.6);
 }
 
+label > p {
+    color: rgba(0,0,0, 0.6);
+}
+
 .buttons {
     display: flex;
     justify-content: space-between;

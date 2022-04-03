@@ -2,7 +2,12 @@ import { useState } from "react";
 import "./CreateStore.css"
 import Create from "./Create.png"
 import Manager from "./Manager.png"
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+
 const CreateStore = () => {
+
+    //Initialize use history
+    const history = useHistory();
 
     const[count, setCount] = useState(1);
     const[form, setForm] = useState({
@@ -56,6 +61,10 @@ const CreateStore = () => {
                 password: "",
                 permission: ""
             });
+            
+            //Redirect
+            history.push("/getStores")
+
         })
         .catch(e=>{
             console.warn(e.message);

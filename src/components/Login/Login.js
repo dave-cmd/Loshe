@@ -75,8 +75,9 @@ const Login = ({setToken}) => {
                             value={loginForm.password} />
                     </label>
                     <div className="buttons">
-                        <button type="submit">Submit</button>
-                        <p onClick={toggleForms}>Signup ?</p>
+                        <button type="submit" className="action update">Login</button>
+                        <button type="submit" className="action update" onClick={toggleForms}>Register</button>
+                        {/* <p onClick={toggleForms}>Signup ?</p> */}
                     </div>
                 </form> 
             </div>

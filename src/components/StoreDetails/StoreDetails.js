@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
 const StoreDetails = () => {
+    //Get id from parameter
     const {id} = useParams();
     const{data, error, isFetching} = useFetch('/api/store/' + id)
 
@@ -21,8 +22,8 @@ const StoreDetails = () => {
     //Toggle deleteOverlay visibility
     const [displayDeleteOverlay, setDisplayDeleteOverlay] = useState(false)
 
-    //Delete activation
-    const [deleteActive, setDeleteActive] = useState(false)
+    // //Delete activation
+    // const [deleteActive, setDeleteActive] = useState(false)
    
     //Icons
     const profileIcon = <FontAwesomeIcon className="profileIcon" icon={faUser} />
@@ -31,7 +32,7 @@ const StoreDetails = () => {
 
     //Fetch from roles table
     const {data:manager, error: errorRole} = useFetch('/api/staff/' + data.user_id)
-    console.log(manager)
+  
     //Activate delete overlay
     const activateDeleteOverlay = ()=>{
         setDisplayDeleteOverlay(!displayDeleteOverlay)
@@ -52,7 +53,7 @@ const StoreDetails = () => {
         .then(data=>{
             console.log(data);
             setDisplayDeleteOverlay(false);
-            history.push("/getStore")
+            history.push("/getStores")
         })
         .catch(e=>{
             setDeleteError(e.message)
