@@ -1,6 +1,9 @@
+from datetime import datetime
+from email.policy import default
 from enum import unique
 from operator import index
 from pydoc import describe
+from sqlite3 import Timestamp
 from unicodedata import category
 from app import db
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -45,6 +48,7 @@ class Product(db.Model):
      price = db.Column(db.Integer(), index=True)
      quantity = db.Column(db.Integer(), index=True)
      category_id = db.Column(db.Integer(), db.ForeignKey('category.id'), nullable=True)
+     orders = db.relationship('Order', backref='productorders', lazy='dynamic')
     
 
 class Store(db.Model):
@@ -52,3 +56,14 @@ class Store(db.Model):
     storename = db.Column(db.String(128), index=True, unique=True)
     region = db.Column(db.String(128), index=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
+    orders = db.relationship('Order', backref='storeorders', lazy='dynamic')
+
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    quantity = db.Column(db.Integer(), index=True)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+

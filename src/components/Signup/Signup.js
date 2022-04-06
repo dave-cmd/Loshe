@@ -49,7 +49,7 @@ const Signup = (props) => {
     return (
         <div className="signup-wrapper">
                 <h1>SignUp</h1> 
-                <form onSubmit={submitHandler}>
+                <form onSubmit={submitHandler} className="action">
                 <label>
                         <p>Firstname</p>
                         <input type="text"

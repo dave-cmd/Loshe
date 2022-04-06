@@ -7,3 +7,4 @@ class Config():
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ADMIN_EMAILS = ['kanjurus8@gmail.com']
+    POSTS_PER_PAGE = 3

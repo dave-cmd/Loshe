@@ -2,7 +2,7 @@ import "./StoreDetails.css"
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import useFetch from "../hooks/useFetch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faPhone, faAt } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faPhone, faAt, faStore } from '@fortawesome/free-solid-svg-icons'
 import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
 import { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
@@ -26,7 +26,7 @@ const StoreDetails = () => {
     // const [deleteActive, setDeleteActive] = useState(false)
    
     //Icons
-    const profileIcon = <FontAwesomeIcon className="profileIcon" icon={faUser} />
+    const storeIcon = <FontAwesomeIcon className="profileIcon" icon={faStore} />
     const emailIcon = <FontAwesomeIcon className="emailIcon" icon={faAt} />
     const phoneIcon = <FontAwesomeIcon className="phoneIcon" icon={faPhone} />
 
@@ -79,7 +79,7 @@ const StoreDetails = () => {
             { isFetching=== false && Object.keys(data).length > 0 && error === null && 
                 (<>
                     <div className="name-section">
-                        {profileIcon}
+                        {storeIcon}
                         <div>{data.storename}</div>
                         <div className="bold">{data.region}</div>
                     </div>

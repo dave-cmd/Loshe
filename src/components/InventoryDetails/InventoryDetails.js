@@ -2,7 +2,7 @@ import "./InventoryDetails.css"
 import { Redirect, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import useFetch from "../hooks/useFetch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faPhone, faAt } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faPhone, faAt, } from '@fortawesome/free-solid-svg-icons'
 import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
 import { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
@@ -101,8 +101,8 @@ const InventoryDetails = () => {
                         </div>
                     </div>
                     <div className="store-section">
-                        <div className="font bold">Description</div>
-                        <div>{data.description}</div>
+                        <div className="font bold">Description:</div>
+                        <div className="font">{data.description}</div>
                         {/* { Array.isArray(data.store) ? (data.store.map(store=>{
                             return <div key={store.id}>
                                         <div className="font bold">{store.storename}</div>

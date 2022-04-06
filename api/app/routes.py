@@ -1,12 +1,14 @@
 
 from crypt import methods
+import json
 from urllib import response
 from app import app, db
 from flask import jsonify, request
 import time
 import secrets
-from app.models import User, Role, Category, Product, Store
-from app.schema import UserSchema, RoleSchema, CategorySchema, ProductSchema, StoreSchema 
+from datetime import datetime
+from app.models import User, Role, Category, Product, Store, Order
+from app.schema import UserSchema, RoleSchema, CategorySchema, ProductSchema, StoreSchema, OrderSchema 
 
 #Init Schema
 
@@ -30,7 +32,9 @@ products_schema = ProductSchema(many=True)
 store_schema = StoreSchema()
 stores_schema = StoreSchema(many=True)
 
-
+#Order
+order_schema = OrderSchema()
+orders_schema = OrderSchema(many=True)
 
 @app.route('/api/time')
 def get_current_time():
@@ -57,7 +61,7 @@ def login():
         "user": "This user does not exist!"
         })
 
-#Sigup
+#Create user/ Signup
 @app.route("/api/signup", methods=['POST', 'GET'])
 def signup():
 
@@ -98,7 +102,7 @@ def signup():
         "route": "Sign up!"
     })
 
-#Create Inventory
+#Create inventory
 @app.route("/api/createInventory", methods=['POST', 'GET'])
 def createInventory():
 
@@ -170,7 +174,7 @@ def createInventory():
         "route": "Create Inventory!"
     })
 
-#Create Store
+#Create store
 @app.route("/api/createStore", methods=['POST', 'GET'])
 def createStore():
 
@@ -272,6 +276,23 @@ def createStore():
         "route": "Create Store!"
     })
 
+#Create order
+@app.route("/api/createOrder", methods=['GET', 'POST'])
+def createOrder():
+    #Get json data
+    json_data = request.get_data()
+    
+    #Get data from post request
+    if request.method == 'POST':
+        Order( 
+            quantity = json_data['quantity'],
+            store_id = json_data['store_id'],
+            product_id = json_data['order_id']
+        )
+    return jsonify({
+            'route': 'createOrder'
+        })
+
 #Get staff
 @app.route("/api/getStaff", methods=['GET', 'POST'])
 def getStaff():
@@ -294,41 +315,32 @@ def getStaff():
         "route": "getStaff"
         })
 
-
-#Get staff by Id
+#Get staff by Id [VERIFIED]
 @app.route("/api/staff/<int:id>", methods=['GET', 'POST'])
 def staff(id):
     if request.method == 'GET':
+        #User instance
         user = User.query.filter_by(id=id).first()
-        print(len(list(user.store)),"------------")
-        #user = user_schema.dump(user)
-        # if len(list(user['store']) ) <= 1:
-        if len(list(user.store) ) == 0:
-            # user['store'] = store_schema.dump(user['store'])
-            dump_store = store_schema.dump(list(user.store))
-            print(dump_store)
-            # print(user['store'])
-        # elif len(list(user['store']) ) > 1:
-        elif len(list(user.store) ) <= 1:
-            # user['store'] = store_schema.dump(user['store'])
-            dump_store = store_schema.dump(list(user.store)[0])
-            print(dump_store)
-            # print(user['store'])
-        # elif len(list(user['store']) ) > 1:
-        elif len(list(user.store) ) > 1:
-            # user['store'] = stores_schema.dump(user['store'])
-            dump_store = stores_schema.dump(list(user.store))
-            print(dump_store)
-            # print(stores_schema.dump(user['store']))
-        
-        # print(user)
-        user = user_schema.dump(user)
-        user['store'] = dump_store
+        #Check if user exists
+        if user:
+            if len(list(user.store) ) == 0:
+                dump_store = store_schema.dump(list(user.store))
+                print(dump_store)
+            elif len(list(user.store) ) <= 1:
+                dump_store = store_schema.dump(list(user.store)[0])
+                print(dump_store)
+            elif len(list(user.store) ) > 1:
+                dump_store = stores_schema.dump(list(user.store))
+                print(dump_store)
+            
+            # print(user)
+            user = user_schema.dump(user)
+            user['store'] = dump_store
         
     return jsonify(user)
 
 
-#Get role by Id
+#Get role
 @app.route("/api/role/<int:id>", methods=['GET', 'POST'])
 def role(id):
     if request.method == 'GET':
@@ -368,6 +380,26 @@ def getRoles():
         return jsonify({
         "route": "getRoles"
         })
+
+#Get Order [VERIFIED]
+@app.route("/api/getOrder/<int:id>", methods=['GET', 'POST'])
+def getOrder(id):
+    if request.method == 'GET':
+        #User instance
+        order = Order.query.filter_by(id=id).first()
+        #Check if user exists
+        if order:
+            dump_order = order_schema.dump(order)
+    return jsonify(dump_order)
+
+#Get Orders [VERIFIED]
+@app.route("/api/getOrders", methods=['GET'])
+def getOrders():
+    if request.method == 'GET':
+        orders = Order.query.all()
+        print(orders)
+        dumped_orders = orders_schema.dump(orders)
+        return jsonify(dumped_orders)
 
 
 #Get category
@@ -431,7 +463,9 @@ def product(id):
 def getProducts():
     if request.method == 'GET':
         #Get all staff
-        products = Product.query.all()
+        # products = Product.query.all()
+        page = request.args.get('page', 1, type=int)
+        products = Product.query.paginate(page=page, per_page=app.config['POSTS_PER_PAGE']).items
         result = products_schema.dump(products)
         
         print(result)
@@ -460,7 +494,7 @@ def store(id):
             }
         )
 
-#Gef stores
+#Get stores
 @app.route("/api/getStores")
 def getStore():
     if request.method == 'GET':
@@ -529,26 +563,26 @@ def updateStaff(id):
     if request.method == 'PATCH':
         staff = User.query.get(id)
         
-        staff.firstname = form_data['firstname']
-        staff.lastname = form_data['lastname']
-        staff.role_id = Role.query.filter_by(role=form_data['role']).first().id
+        staff.firstname = form_data['firstname'].strip()
+        staff.lastname = form_data['lastname'].strip()
+        staff.role_id = Role.query.filter_by(role=form_data['role'].strip()).first().id
 
         #check if phone number already exixts
         user_phone = User.query.filter_by(phone=form_data['phone']).first()
         if user_phone == None:
-            staff.email = form_data['email']
+            staff.email = form_data['email'].strip()
         
         #check if email already exits
-        user_email = User.query.filter_by(email=form_data['email']).first()
+        user_email = User.query.filter_by(email=form_data['email'].strip()).first()
         if user_email == None:
-            staff.email = form_data['email']
+            staff.email = form_data['email'].strip()
             
         #check if password is empty
-        if form_data["password"] != "":
-            staff.set_password(form_data['password'])
+        if form_data["password"].strip() != "":
+            staff.set_password(form_data['password'].strip())
         
         #stores
-        stores_names_list = form_data['store'].split(",")
+        stores_names_list = form_data['store'].strip().split(",")
 
         #check if stores in database by storename
         for s in stores_names_list:
@@ -578,13 +612,13 @@ def updateProduct(id):
 
         #Update product:
         if product != None:
-            product.productname = form_data['productname']
-            product.description = form_data['description']
+            product.productname = form_data['productname'].strip()
+            product.description = form_data['description'].strip()
             product.price  = form_data['price']
             product.quantity = form_data['quantity']
 
             #Query category by categoryname provided
-            category_instance = Category.query.filter_by(category=form_data['category']).first()
+            category_instance = Category.query.filter_by(category=form_data['category'].strip()).first()
 
             #check if category exists
             if category_instance != None:
@@ -611,8 +645,8 @@ def updateStore(id):
 
         #Update store instance with form data
         if store!= None:
-            store.storename = form_data['storename']
-            store.region = form_data['region']
+            store.storename = form_data['storename'].strip()
+            store.region = form_data['region'].strip()
 
         #TODO: Update manager
 

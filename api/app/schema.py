@@ -23,3 +23,8 @@ class ProductSchema(ma.Schema):
 class StoreSchema(ma.Schema):
     class Meta:
         fields = ('id', 'storename', 'region', 'user_id')
+
+
+class OrderSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'quantity', 'timestamp', 'product_id', 'store_id')
