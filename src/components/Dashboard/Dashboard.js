@@ -19,22 +19,23 @@ const Dashboard = ()=>{
     })
 
     return ( 
-        <div className="wrapper-dashboard">
-            <div className="top-section">
-                <h1 className="admin-dash-title">Admin Dashboard</h1>
-                <div className="menu-items">
-                    <DashBoardItem icon={"productsInIcon"} text={"Products"}/>
-                    <DashBoardItem icon={"productsOutIcon"} text ={"In Hand"}/>
-                    <DashBoardItem icon={"almostOutIcon"} text={"Low Stock"}/>
-                    <DashBoardItem icon={"storeIcon"} text={"Stores"}/>      
-                </div>   
+        <div className="wrapper-staff-details">
+            <div className="name-section">
+                <h1 className="staff-title">Admin Dashboard</h1>
             </div>
-            <div className="recent-activity">
-                <p className="recent-activity-title">Recent Activity</p>
-                <div className="feed">
-                    {feedItems}
-                </div>
+
+            <div className="hero-section">
+                <DashBoardItem className="store-dashItem" icon={"productsInIcon"} text={"Products"}/>
+                <DashBoardItem className="store-dashItem" icon={"almostOutIcon"} text={"Low Stock"}/>
+                <DashBoardItem className="store-dashItem" icon={"storeIcon"} text={"Stores"}/>      
+            </div>   
+
+            <div className="action-section">Recent Activity</div>
+
+            <div className="feed-section">
+                {feedItems}
             </div>
+
         </div>
      );
 };
