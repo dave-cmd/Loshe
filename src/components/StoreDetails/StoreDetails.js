@@ -1,11 +1,12 @@
 import "./StoreDetails.css"
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import useFetch from "../hooks/useFetch";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faPhone, faAt, faStore } from '@fortawesome/free-solid-svg-icons'
 import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
 import { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import FeedItem from "../sub-components/FeedItem/FeedItem";
+import useFetch from "../hooks/useFetch";
 
 
 const StoreDetails = () => {
@@ -22,9 +23,41 @@ const StoreDetails = () => {
     //Toggle deleteOverlay visibility
     const [displayDeleteOverlay, setDisplayDeleteOverlay] = useState(false)
 
-    // //Delete activation
-    // const [deleteActive, setDeleteActive] = useState(false)
-   
+    /*
+     *Fetch Hero Data:
+     *---------------Product Count, Almost out, In Hand
+     */
+
+     //Fetch product count
+     const{data:products, error:errorProductCount} = useFetch("/api/getProducts")
+
+     //Implement reduce later TODO
+
+     let productCount = 0
+
+     for(let i=0; i<products.length; i++){
+         productCount += products[i].quantity
+     }
+
+     //TODO: Implement Almost Out
+     //TODO: Implement Sales
+     //Implement Request
+
+     //Implement Order/Transactions Feed
+
+     //Fetch product count
+     const{data:orders, error:errorOrders} = useFetch("/api/getOrders")
+
+    //Map over orders
+     const feedItems = orders.map(order=>{
+        return <FeedItem key={order.id}
+                         timestamp={order.timestamp}
+                         quantity={order.quantity}
+                         store_id={order.store_id}
+                         product_id = {order.product_id}/>
+                         })
+
+
     //Icons
     const storeIcon = <FontAwesomeIcon className="profileIcon" icon={faStore} />
     const emailIcon = <FontAwesomeIcon className="emailIcon" icon={faAt} />
@@ -82,6 +115,25 @@ const StoreDetails = () => {
                         {storeIcon}
                         <div>{data.storename}</div>
                         <div className="bold">{data.region}</div>
+                    </div>
+
+                    <div className="hero-section">
+                        <div className="store-dashItem">
+                            <div className="font bold">Products</div>
+                            <div className="font">{productCount}</div>
+                        </div>
+                        <div className="store-dashItem">
+                            <div className="font bold">Low Stock</div>
+                            <div className="font">12000</div>
+                        </div>
+                        <div className="store-dashItem">
+                            <div className=" font bold">Sold</div>
+                            <div className="font">12000</div>
+                        </div>
+                    </div>
+
+                    <div className="feed-section">
+                        {feedItems}
                     </div>
                     <div className="contact-section">
                         <div className="phone-details">

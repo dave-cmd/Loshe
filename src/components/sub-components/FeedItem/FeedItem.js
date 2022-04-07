@@ -29,14 +29,21 @@ const FeedItem = (props) => {
 
     return ( 
         <div className="feed-item">
-            {inIcon}
-            <div className='info'>
-                <p className="item-count">{props.quantity}</p>
-                <p className="date">{dateConverter(props.timestamp)}</p>
+            <div className='icon-container'>
+                {inIcon}
             </div>
-            <p className="title">{product.productname}</p>
-            <p className="shop-name">{store.storename}</p>
-            {arrowRight}
+            <div className="info">
+                <div className="item-count font bold">{props.quantity}</div>
+                <div className="date font" >{dateConverter(props.timestamp)}</div>
+            </div>
+            <div className='feed-text'>
+                <div className="title font bold">{product.productname}</div>
+                <div className="shop-name font">{store.storename}</div>
+            </div>
+            <div className='icon-container'>
+                {arrowRight}
+            </div>
+            
         </div>
      );
 }
