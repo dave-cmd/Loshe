@@ -5,8 +5,12 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 
 
-const Stores = () => {
-    const{data, error} = useFetch("/api/getStores")
+const Stores = ({isAuthorized}) => {
+    //Get id from session storage
+    const object  = JSON.parse(sessionStorage.getItem("token"))
+
+    //Fetch the data by owner
+    const{data, error} = useFetch("/api/getStoresAdmin/" + object.id)
     const infoIcon = <FontAwesomeIcon className="overlayIcons" icon={faInfoCircle} />
 
     //Map through fetched data to create staff elements
@@ -20,13 +24,17 @@ const Stores = () => {
                </Link>})
     
 
-    return ( 
-        <div className="wrapper-staff">
+    return (
+        <>
+        {object.role !== "Admin" && <div>Unauthorized user.</div>}
+        {object.role === "Admin" && <div className="wrapper-staff">
             <h1 className="staff-title">Stores</h1>
             { data.length === 0 && error === null  && <div>Fetching resource...</div>}
             {error === null && data.length > 0 && <div className="staff-list">{elements}</div>}
             { error !== null && <div>{error}</div>}
-        </div>
+        </div>}
+        </> 
+
      );
 }
  

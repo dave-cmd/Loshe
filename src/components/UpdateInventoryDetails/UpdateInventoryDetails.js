@@ -18,7 +18,7 @@ const UpdateInventoryDetails = () => {
 
     //Fetch product category
     const {data:category, setCategoryError} = useFetch("/api/category/" + data.category_id);
-    console.log(category)
+    
     //Form state
     const[form, setForm] = useState({
         productname: "",
@@ -30,16 +30,17 @@ const UpdateInventoryDetails = () => {
 
     //setFormData
     useEffect(()=>{
-        if(Array.isArray(data) ===  false){
+        if(Array.isArray(data) ===  false && Array.isArray(category) === false){
             setForm({
                 productname: data.productname,
                 price: data.price,
                 description: data.description,
                 quantity: data.quantity,
-                category: typeof category === 'object' ? category.category : ""
+                // category: typeof category === 'object' ? category.category : ""
+                category : category.category
             })
         }
-    },[data])
+    },[data, category])
 
     
     //Capture form data on change

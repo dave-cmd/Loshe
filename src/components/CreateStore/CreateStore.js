@@ -4,7 +4,9 @@ import Create from "./Create.png"
 import Manager from "./Manager.png"
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-const CreateStore = () => {
+const CreateStore = ({ isAuthorized, userID }) => {
+    //Get id from session storage
+    const object  = JSON.parse(sessionStorage.getItem("token"))
 
     //Initialize use history
     const history = useHistory();
@@ -18,7 +20,8 @@ const CreateStore = () => {
         phone: "",              
         email: "",
         password: "",
-        permission: ""
+        permission: "",
+        owner: object.id
     });
 
     //progressive form handler
@@ -37,7 +40,9 @@ const CreateStore = () => {
 
     //Submit form data
     const submitHandler = (event)=>{
+
         event.preventDefault();
+
         fetch("/api/createStore", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -71,8 +76,9 @@ const CreateStore = () => {
         })
     }
 
-    return ( 
-            <div className="wrapper-create-store">
+    return ( <>
+                {object.role !== "Admin" && <div>Unauthorized user</div>}
+                { object.role === "Admin" && <div className="wrapper-create-store">
                 <h2 className="main-title">Create Store</h2>
                 <form onSubmit={submitHandler}> 
                     {count === 1 &&
@@ -166,8 +172,11 @@ const CreateStore = () => {
                     {count === 1 && <button className="btn next" onClick={progressiveHandler}>Next</button>}
                     {count === 2 && <button className="btn submit" >Submit</button>}
                 </form>
-            </div>
+            </div>}
+            </>
+
      );
 }
+
  
 export default CreateStore;

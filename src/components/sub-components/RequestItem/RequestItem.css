@@ -1,0 +1,94 @@
+.transparent {
+    background-color: transparent;
+    border: solid 1px white;
+}
+
+.icon-container{
+    width: 10%;
+}
+
+.icon-color{
+    color: rgba(0,0,0,0.5);
+    font-size: 30px;
+}
+
+.display {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content:start;
+    gap: 5px;
+}
+
+.orders-feed-text{
+    width: 40%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.button-container {
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.button-container >input {
+    border: none;
+    width: 20%;
+}
+
+
+.round-button{
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border: solid 1px white;
+}
+
+.minus {
+    padding: 4px 10px;
+}
+
+.button {
+    background-color: #58E5EE;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.button:hover, .round-button:hover {
+    /* background-color: #58E5EE; */
+    color: black;
+    /* border: solid white 2px; */
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.send-container{
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media screen and (max-width: 500px) {
+    .icon-color{
+        font-size: 20px;
+    }
+    .button{
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .orders-feed-text{
+        flex-direction: column;
+    }
+    
+}

@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, { useState, useRef } from "react"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import Login from "../Login/Login"
@@ -18,10 +18,17 @@ import UpdateInventoryDetails from "../UpdateInventoryDetails/UpdateInventoryDet
 import Stores from "../Stores/Stores";
 import StoreDetails from "../StoreDetails/StoreDetails";
 import UpdateStoreDetails from "../UpdateStoreDetails/UpdateStoreDetails"
+import Request from "../Request/Request";
 
 function App() {
   const {token, setToken} = useToken()
  
+  //Set authorization
+  const [isAuthorized, setIsAuthorized] = useState(false)
+
+  //Set logged in user Id
+  const [userID, setUserID] = useState(null)
+
   //Toggle menu visibility
   const[menuVisible, setMenuVisible] = useState(false);
 
@@ -43,7 +50,9 @@ function App() {
   //User authentication
   if(!token) {
     return (
-      <Login setToken={setToken} />
+      <Login setToken={setToken}
+             setIsAuthorized = {setIsAuthorized}
+             setUserID = {setUserID} />
     );
   }
   else {
@@ -54,25 +63,33 @@ function App() {
           <Navigation 
               setToken={setToken}
               toggleHamburger={toggleHamburger}
-              logout={logout} />
+              logout={logout}
+              isAuthorized = {isAuthorized} />
           <Overlay visible={menuVisible}
                   toggleHamburger={toggleHamburger}
-                  logout={logout} />
+                  logout={logout}
+                  isAuthorized= {isAuthorized} />
           <Switch>
             <Route path="/" exact>
-              <Dashboard />
+              <Dashboard  isAuthorized={isAuthorized}
+                          userID={userID}
+              />
             </Route>
             <Route path="/createStore">
-              <CreateStore />
+              <CreateStore isAuthorized={isAuthorized}
+                           userID={userID} 
+              />
             </Route>
             <Route path="/createInventory">
-              <CreateInventory />
+              <CreateInventory isAuthorized={isAuthorized}
+                               userID={userID} />
             </Route>
             <Route path="/getInventory">
-              <Inventory />
+              <Inventory isAuthorized={isAuthorized} />
             </Route>
             <Route path="/getStaff">
-              <Staff />
+              <Staff isAuthorized={isAuthorized}
+                     userID={userID} />
             </Route>
             <Route path="/staff/:id">
               <StaffDetails />
@@ -84,7 +101,8 @@ function App() {
               <StoreDetails />
             </Route>
             <Route path="/getStores">
-              <Stores />
+              <Stores isAuthorized={isAuthorized}
+                      userID={userID} />
             </Route>
             <Route path="/updateStaffDetails/:id">
               <UpdateStaffDetails />
@@ -94,6 +112,9 @@ function App() {
             </Route>
             <Route path="/updateStoreDetails/:id">
               <UpdateStoreDetails />
+            </Route>
+            <Route path="/request">
+              <Request />
             </Route>
             <Route path="*">
               <NotFound />

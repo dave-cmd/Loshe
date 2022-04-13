@@ -1,4 +1,4 @@
-import "./StoreDetails.css"
+
 import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faPhone, faAt, faStore, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
@@ -9,11 +9,11 @@ import FeedItem from "../sub-components/FeedItem/FeedItem";
 import useFetch from "../hooks/useFetch";
 
 
-const StoreDetails = () => {
-    //Get id from parameter
-    const {id} = useParams();
-
-    const{data, error, isFetching} = useFetch('/api/store/' + id)
+const DashboardManager = ({userID}) => {
+    //Get id from session storage
+    const object  = JSON.parse(sessionStorage.getItem("token"))
+    
+    const{data, error, isFetching} = useFetch('/api/storeByManager/' + object.id)
 
     //Delete error
     const[deleteError, setDeleteError] = useState(false)
@@ -66,7 +66,7 @@ const StoreDetails = () => {
     const requestIcon = <FontAwesomeIcon className="requestIcon" icon={faPlusCircle} />
 
     //Fetch from roles table
-    const {data:manager, error: errorRole} = useFetch('/api/staff/' + data.user_id)
+    const {data:manager, error: errorRole} = useFetch('/api/staff/' + data.userID)
   
     //Activate delete overlay
     const activateDeleteOverlay = ()=>{
@@ -97,9 +97,9 @@ const StoreDetails = () => {
     }
 
     //Redirect to update
-    const redirectToUpdate = ()=>{
-        history.push("/updateStoreDetails/" + id);
-    }
+    // const redirectToUpdate = ()=>{
+    //     history.push("/updateStoreDetails/" + id);
+    // }
 
     //Redirect to request
     const redirectToRequest = ()=>{
@@ -108,12 +108,12 @@ const StoreDetails = () => {
     return ( 
         
         <div className="wrapper-staff-details">
-            <DeleteOverlay display={displayDeleteOverlay}              
+            {/* <DeleteOverlay display={displayDeleteOverlay}              
                            setDisplay= {setDisplayDeleteOverlay}
                            id={id}
                            deleteStaff={deleteStaff}
                            deleteError={deleteError}
-                           setDeleteError={setDeleteError}/>
+                           setDeleteError={setDeleteError}/> */}
             { data.length === 0 && error === null  && <div className="status">Fetching resource...</div>}
             { isFetching=== false && Object.keys(data).length > 0 && error === null && 
                 (<>
@@ -162,8 +162,8 @@ const StoreDetails = () => {
                         <div className="font">{manager.firstname} {manager.lastname}</div>
                     </div>
                     <div className="action-section">
-                        <div className="action update" onClick={redirectToUpdate}>Update</div>
-                        <div className="action delete" onClick={()=>{activateDeleteOverlay();}}>Delete</div>
+                        {/* <div className="action update" onClick={redirectToUpdate}>Update</div>
+                        <div className="action delete" onClick={()=>{activateDeleteOverlay();}}>Delete</div> */}
                         <div className="action delete" onClick={()=>{redirectToRequest()}}>Request</div>
                     </div>
                 </>)
@@ -173,4 +173,4 @@ const StoreDetails = () => {
      );
 }
  
-export default StoreDetails;
+export default DashboardManager;

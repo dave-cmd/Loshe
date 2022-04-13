@@ -3,28 +3,28 @@ from app import ma
 
 class RoleSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'role', 'description', 'user')
+        fields = ('id', 'role', 'description', 'created_at', 'updated_at', 'user_id')
 
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'firstname', 'lastname', 'email', 'phone', 'password_hash', 'store', 'role_id')
+        fields = ('id', 'firstname', 'lastname', 'email', 'phone','created_at', 'updated_at', 'owner', 'password_hash', 'store', 'role_id')
 
 
 class CategorySchema(ma.Schema):
     class Meta:
-        fields = ('id', 'category', 'product')
+        fields = ('id', 'category', 'created_at', 'updated_at', 'owner', 'product_id')
 
 class ProductSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'productname', 'description', 'price', 'quantity', 'category_id')
+        fields = ('id', 'productname', 'description', 'price', 'quantity' ,'created_at', 'updated_at', 'owner', 'category_id')
 
 
 class StoreSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'storename', 'region', 'user_id')
+        fields = ('id', 'storename', 'region' ,'created_at', 'updated_at', 'owner', 'user_id')
 
 
 class OrderSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'quantity', 'timestamp', 'product_id', 'store_id')
+        fields = ('id', 'quantity', 'timestamp','created_at', 'updated_at', 'owner', 'product_id', 'store_id')

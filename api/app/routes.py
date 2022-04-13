@@ -43,14 +43,18 @@ def get_current_time():
 #Login
 @app.route("/api/login", methods=['POST', 'GET'])
 def login():
-
+    #Get form data from request
     json_data = request.get_json()
     user = User.query.filter_by(email=json_data['email']).first()
     
     if user:
         if user.check_password(json_data['password']):
+            #Get the by id
+            role = Role.query.get(user.role_id).role
             return jsonify({
-                "token": secrets.token_hex()
+                "token": secrets.token_hex(),
+                "id": user.id,
+                "role": role
             })
         else:
             return jsonify({
@@ -67,11 +71,12 @@ def signup():
 
     if request.method == 'POST':
         json_data = request.get_json()
-        print(json_data["email"])
-        user = User.query.filter_by(email=json_data["email"]).first()
-        print(user)
+        # print(json_data["email"])
+        user_email = User.query.filter_by(email=json_data["email"]).first()
+        user_phone = User.query.filter_by(phone=json_data["phone"]).first()
+        # print(user)
 
-        if user != None:
+        if user_phone != None or user_email != None:
             print("A user with the same credentials exists!")
             return jsonify({
                 "Error": "User with this email already exists!"
@@ -84,14 +89,18 @@ def signup():
                     email =  json_data["email"],
                     phone =  json_data["phone"],
             )
-
+            #Set the owner of admin user to 1000
+            post_user.owner = 1000
             post_user.set_password(json_data["password"])
 
-            #check if email is admin email
+            #Set Super/Admin
             if json_data['email'] in app.config['ADMIN_EMAILS']:
-                post_user.role_id = 1
+                role1  = Role.query.filter_by(role="Super").first()
+                post_user.role_id = role1.id
             else:
                 post_user.role_id = 2
+                role2  = Role.query.filter_by(role="Admin").first()
+                post_user.role_id = role2.id
 
             db.session.add(post_user)
             db.session.commit()
@@ -110,7 +119,7 @@ def createInventory():
         #Form json data
         json_data = request.get_json()
 
-        #Product and Category instances
+        #Check if Product and Category instances exist
         product = Product.query.filter_by(productname=json_data["productname"]).first()
         product_category = Category.query.filter_by(category=json_data["category"]).first()
 
@@ -128,7 +137,8 @@ def createInventory():
 
             #Category instance
             post_category = Category(
-                category = json_data['category']
+                category = json_data['category'],
+                owner = json_data['owner']
             )
 
             #Product instance
@@ -136,7 +146,8 @@ def createInventory():
                     productname = json_data["productname"],
                     description = json_data["description"],
                     price =  json_data["price"],
-                    quantity =  json_data["quantity"]
+                    quantity =  json_data["quantity"],
+                    owner = json_data['owner']
             )
 
             post_category.product.append(post_product)
@@ -156,7 +167,8 @@ def createInventory():
                     productname = json_data["productname"],
                     description = json_data["description"],
                     price =  json_data["price"],
-                    quantity =  json_data["quantity"]
+                    quantity =  json_data["quantity"],
+                    owner = json_data['owner']
             )
 
             #Append Product instance to Category instance backref
@@ -202,15 +214,16 @@ def createStore():
                 firstname = json_data['firstname'],
                 lastname = json_data['lastname'],
                 email = json_data['email'],
-                phone = json_data['phone']
+                phone = json_data['phone'],
+                owner = json_data['owner']
             )
-
             manager.set_password(json_data['password'])
 
-            #Product instance
+            #Store instance
             post_store = Store(
                     storename = json_data["storename"],
                     region = json_data["region"],
+                    owner = json_data['owner']
 
             )
             if user_role != None:
@@ -218,7 +231,6 @@ def createStore():
             
             
             manager.store.append(post_store)
-            # post_store.product.append(post_product)
 
             db.session.add(manager)
             db.session.add(post_store)
@@ -234,7 +246,8 @@ def createStore():
             #Product instance
             post_store = Store(
                 storename = json_data['storename'],
-                region= json_data['region']
+                region= json_data['region'],
+                owner = json_data['owner']
             )
 
             #Append Store instance to User instance backref
@@ -256,7 +269,8 @@ def createStore():
             #Product instance
             post_store = Store(
                 storename = json_data['storename'],
-                region= json_data['region']
+                region= json_data['region'],
+                owner = json_data['owner']
             )
 
             #Append Store instance to User instance backref
@@ -315,6 +329,28 @@ def getStaff():
         "route": "getStaff"
         })
 
+#Get staff Admin/Stores owner
+@app.route("/api/getStaffAdmin/<int:id>", methods=['GET', 'POST'])
+def getStaffAdmin(id):
+    if request.method == 'GET':
+        #Get all staff
+        users = User.query.filter_by(owner=id)
+        result = users_schema.dump(users)
+
+        # serialize the AppenderBaseQueryProperty
+        for user in result:
+            if len(list(user['store']) ) <= 1:
+                user['store'] = user_schema.dump(user['store'])
+            elif len(list(user['store']) ) > 1:
+                user['store'] = users_schema.dump(user['store'])
+        
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getStaff"
+        })
+
 #Get staff by Id [VERIFIED]
 @app.route("/api/staff/<int:id>", methods=['GET', 'POST'])
 def staff(id):
@@ -338,7 +374,6 @@ def staff(id):
             user['store'] = dump_store
         
     return jsonify(user)
-
 
 #Get role
 @app.route("/api/role/<int:id>", methods=['GET', 'POST'])
@@ -475,11 +510,46 @@ def getProducts():
         "route": "getProducts"
         })
 
+#Get products admin
+@app.route("/api/getProductsAdmin/<int:id>", methods=['GET', 'POST'])
+def getProductsAdmin(id):
+    if request.method == 'GET':
+        #Get all staff
+        products = Product.query.filter_by(owner=id)
+        # page = request.args.get('page', 1, type=int)
+        # products = Product.query.paginate(page=page, per_page=app.config['POSTS_PER_PAGE']).items
+        result = products_schema.dump(products)
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getProducts"
+        })
+
 #Get store
 @app.route("/api/store/<int:id>", methods=['GET', 'POST'])
 def store(id):
     if request.method == 'GET':
         store_inst = Store.query.filter_by(id=id).first()
+        if store_inst != None:
+            store_inst = store_schema.dump(store_inst)
+            return jsonify(store_inst)
+        else:
+            return jsonify({
+                'store': None
+            })
+    else:
+        return jsonify(
+            {
+            'route': 'get store!'
+            }
+        )
+
+#Get store by manager ID
+@app.route("/api/storeByManager/<int:id>", methods=['GET', 'POST'])
+def storeManager(id):
+    if request.method == 'GET':
+        store_inst = Store.query.filter_by(user_id=id).first()
         if store_inst != None:
             store_inst = store_schema.dump(store_inst)
             return jsonify(store_inst)
@@ -507,6 +577,21 @@ def getStore():
     else:
         return jsonify({
         "route": "getStores"
+        })
+
+#Get stores by admin
+@app.route("/api/getStoresAdmin/<int:id>")
+def getStoresAdmin(id):
+    if request.method == 'GET':
+        #Get all Stores by admin
+        stores = Store.query.filter_by(owner=id)
+        result = stores_schema.dump(stores)
+        
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getStoresAdmin"
         })
 
 

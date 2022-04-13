@@ -83,6 +83,7 @@ const StaffDetails = () => {
                         <div>{data.firstname} {data.lastname}</div>
                         <div className="bold">{role.role}</div>
                     </div>
+
                     <div className="contact-section">
                         <div className="phone-details">
                             {phoneIcon}

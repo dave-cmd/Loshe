@@ -5,8 +5,12 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 
 
-const Staff = () => {
-    const{data, error} = useFetch("/api/getProducts")
+const Staff = ({ isAuthorized }) => {
+    //Get id from session storage
+    const object  = JSON.parse(sessionStorage.getItem("token"))
+
+    //Fetch products by admin user
+    const{data, error} = useFetch("/api/getProductsAdmin/" + object.id)
     const infoIcon = <FontAwesomeIcon className="overlayIcons" icon={faInfoCircle} />
 
     //Map through fetched data to create inventory elements
@@ -21,12 +25,15 @@ const Staff = () => {
     
 
     return ( 
-        <div className="wrapper-staff">
-            <h1 className="staff-title">Inventory</h1>
-            { data.length === 0 && error === null  && <div>Fetching resource...</div>}
-            {error === null && data.length > 0 && <div className="staff-list">{elements}</div>}
-            { error !== null && <div>{error}</div>}
-        </div>
+        <>
+            {isAuthorized != "Admin" && <div>Unauthorized user.</div>}
+            {isAuthorized === "Admin" && <div className="wrapper-staff">
+                <h1 className="staff-title">Inventory</h1>
+                { data.length === 0 && error === null  && <div>Fetching resource...</div>}
+                {error === null && data.length > 0 && <div className="staff-list">{elements}</div>}
+                { error !== null && <div>{error}</div>}
+            </div>}
+        </>
      );
 }
  

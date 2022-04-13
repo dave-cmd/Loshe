@@ -2,7 +2,7 @@ import "./CreateInventory.css"
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-const CreateInventory = () => {
+const CreateInventory = ({ isAuthorized, userID }) => {
 
     //Initialize use history
     const history = useHistory();
@@ -13,7 +13,8 @@ const CreateInventory = () => {
         description: "",
         price: "",
         quantity: "",
-        category: ""
+        category: "",
+        owner: userID
     });
 
 
@@ -64,8 +65,10 @@ const CreateInventory = () => {
         })
     }
 
-    return ( 
-        <div className="wrapper-create-store">
+    return (
+        <>
+        {isAuthorized !== "Admin" && <div>Unauthorized user</div>}
+        {isAuthorized === "Admin" && <div className="wrapper-create-store">
         <h2 className="main-title">Create Inventory</h2>
         <form onSubmit={submitHandler}>
             {count === 1 &&
@@ -134,7 +137,9 @@ const CreateInventory = () => {
             {count === 1 && <button className="btn next" onClick={progressiveHandler}>Next</button> }
             {count === 2 && <button type="submit" className="btn submit" >Submit</button> }
         </form>
-    </div>
+        </div>}
+        </> 
+        
      );
 }
  

@@ -3,7 +3,7 @@ import {useState} from 'react'
 import PropTypes from 'prop-types';
 import Signup from "../Signup/Signup";
 
-const Login = ({setToken}) => {
+const Login = ({setToken, setIsAuthorized, setUserID}) => {
 
     const[loginForm, setLoginForm] = useState({
         email : "",
@@ -39,6 +39,8 @@ const Login = ({setToken}) => {
         })
         .then(data=>{
             setToken(data)
+            setIsAuthorized(data.role)
+            setUserID(data.id)
             setLoginForm({
                 email:"",
                 password:""

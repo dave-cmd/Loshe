@@ -5,6 +5,8 @@ from operator import index
 from pydoc import describe
 from sqlite3 import Timestamp
 from unicodedata import category
+
+from sqlalchemy import true
 from app import db
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -12,6 +14,8 @@ class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     role = db.Column(db.String(64), index=True, unique=True)
     description = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, index=True, nullable=True)
     user = db.relationship('User', backref='access', lazy='dynamic')
 
 class User(db.Model):
@@ -20,6 +24,9 @@ class User(db.Model):
     lastname = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     phone = db.Column(db.Integer(), index=True, unique=True)
+    owner = db.Column(db.Integer(), index=True, nullable=True)
+    created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, index=True, nullable=True)
     password_hash = db.Column(db.String(128))
     store = db.relationship('Store', backref='manager', lazy='dynamic')
 
@@ -39,7 +46,9 @@ class Category(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     category = db.Column(db.String(64), index=True)
     product = db.relationship('Product', backref='class', lazy='dynamic')
-
+    owner = db.Column(db.Integer(), index=True, nullable=True)
+    created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, index=True, nullable=True)
 
 class Product(db.Model):
      id = db.Column(db.Integer(), primary_key=True)
@@ -47,6 +56,11 @@ class Product(db.Model):
      description = db.Column(db.String(128), index=True)
      price = db.Column(db.Integer(), index=True)
      quantity = db.Column(db.Integer(), index=True)
+     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+     updated_at = db.Column(db.DateTime, index=True)
+     owner = db.Column(db.Integer(), index=True, nullable=True)
+     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+     updated_at = db.Column(db.DateTime, index=True, nullable=True)
      category_id = db.Column(db.Integer(), db.ForeignKey('category.id'), nullable=True)
      orders = db.relationship('Order', backref='productorders', lazy='dynamic')
     
@@ -55,6 +69,9 @@ class Store(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     storename = db.Column(db.String(128), index=True, unique=True)
     region = db.Column(db.String(128), index=True)
+    owner = db.Column(db.Integer(), index=True, nullable=True)
+    created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, index=True, nullable=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
     orders = db.relationship('Order', backref='storeorders', lazy='dynamic')
 
@@ -64,6 +81,8 @@ class Order(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     quantity = db.Column(db.Integer(), index=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    owner = db.Column(db.Integer(), index=True, nullable=True)
+    updated_at = db.Column(db.DateTime, index=True, nullable=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 
