@@ -30,24 +30,18 @@ const DashboardManager = ({userID}) => {
      */
 
      //Fetch product count
-     const{data:products, error:errorProductCount} = useFetch("/api/getProducts")
+     const{data:products, error:errorProductCount} = useFetch("/api/getProductsAdmin/" + object.id)
 
      //Implement reduce later TODO
-
      let productCount = 0
 
      for(let i=0; i<products.length; i++){
          productCount += products[i].quantity
      }
 
-     //TODO: Implement Almost Out
-     //TODO: Implement Sales
-     //Implement Request
+     //Fetch orders
+     const{data:orders, error:errorOrders} = useFetch("/api/getOrders/")
 
-     //Implement Order/Transactions Feed
-
-     //Fetch product count
-     const{data:orders, error:errorOrders} = useFetch("/api/getOrders")
 
     //Map over orders
      const feedItems = orders.map(order=>{
@@ -66,7 +60,7 @@ const DashboardManager = ({userID}) => {
     const requestIcon = <FontAwesomeIcon className="requestIcon" icon={faPlusCircle} />
 
     //Fetch from roles table
-    const {data:manager, error: errorRole} = useFetch('/api/staff/' + data.userID)
+    const {data:manager, error: errorRole} = useFetch('/api/staff/' + object.id)
   
     //Activate delete overlay
     const activateDeleteOverlay = ()=>{

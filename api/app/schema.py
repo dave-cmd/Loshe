@@ -17,7 +17,7 @@ class CategorySchema(ma.Schema):
 
 class ProductSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'productname', 'description', 'price', 'quantity' ,'created_at', 'updated_at', 'owner', 'category_id')
+        fields = ('id', 'productname', 'description', 'price', 'quantity', 'location', 'created_at', 'updated_at', 'owner', 'category_id')
 
 
 class StoreSchema(ma.Schema):

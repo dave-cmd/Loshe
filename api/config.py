@@ -8,3 +8,4 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ADMIN_EMAILS = ['kanjurus8@gmail.com']
     POSTS_PER_PAGE = 3
+    ALMOST_OUT = 100

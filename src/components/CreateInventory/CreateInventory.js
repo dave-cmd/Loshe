@@ -1,8 +1,10 @@
 import "./CreateInventory.css"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const CreateInventory = ({ isAuthorized, userID }) => {
+    //Get credentials from session
+    const object = JSON.parse(sessionStorage.getItem("token"))
 
     //Initialize use history
     const history = useHistory();
@@ -14,7 +16,7 @@ const CreateInventory = ({ isAuthorized, userID }) => {
         price: "",
         quantity: "",
         category: "",
-        owner: userID
+        owner: object.id
     });
 
 
@@ -67,8 +69,8 @@ const CreateInventory = ({ isAuthorized, userID }) => {
 
     return (
         <>
-        {isAuthorized !== "Admin" && <div>Unauthorized user</div>}
-        {isAuthorized === "Admin" && <div className="wrapper-create-store">
+        {object.role !== "Admin" && <div>Unauthorized user</div>}
+        {object.role === "Admin" && <div className="wrapper-create-store">
         <h2 className="main-title">Create Inventory</h2>
         <form onSubmit={submitHandler}>
             {count === 1 &&

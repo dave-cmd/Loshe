@@ -4,7 +4,7 @@ const DashBoardItem = (props) => {
 
     return ( 
         <div className="store-dashItem" onClick={()=>{props.click()}} >
-            <p className=" font">2400</p>
+            <p className=" font">{props.counter}</p>
             <p className="font bold">{props.text}</p>
         </div>
      );

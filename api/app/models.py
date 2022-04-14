@@ -52,10 +52,11 @@ class Category(db.Model):
 
 class Product(db.Model):
      id = db.Column(db.Integer(), primary_key=True)
-     productname = db.Column(db.String(256), index=True)
-     description = db.Column(db.String(128), index=True)
+     productname = db.Column(db.String(12), index=True)
+     description = db.Column(db.String(256), index=True)
      price = db.Column(db.Integer(), index=True)
      quantity = db.Column(db.Integer(), index=True)
+     location = db.Column(db.String(128), index=True)
      created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
      updated_at = db.Column(db.DateTime, index=True)
      owner = db.Column(db.Integer(), index=True, nullable=True)

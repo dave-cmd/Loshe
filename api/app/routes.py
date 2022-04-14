@@ -1,6 +1,7 @@
 
 from crypt import methods
 import json
+from statistics import quantiles
 from urllib import response
 from app import app, db
 from flask import jsonify, request
@@ -150,6 +151,7 @@ def createInventory():
                     owner = json_data['owner']
             )
 
+            post_product.location = "Warehouse"
             post_category.product.append(post_product)
 
             db.session.add(post_product)
@@ -170,7 +172,7 @@ def createInventory():
                     quantity =  json_data["quantity"],
                     owner = json_data['owner']
             )
-
+            post_product.location = "Warehouse"
             #Append Product instance to Category instance backref
             product_category.product.append(post_product)
             
@@ -526,6 +528,24 @@ def getProductsAdmin(id):
         "route": "getProducts"
         })
 
+#Get products almost out admin
+@app.route("/api/getProductsAlmostOut/<int:id>", methods=['GET', 'POST'])
+def getProductsAlmostOut(id):
+    if request.method == 'GET':
+        #Get all staff
+        products = Product.query.filter_by(owner=id)
+        products = products.filter(Product.quantity < app.config["ALMOST_OUT"])
+        # page = request.args.get('page', 1, type=int)
+        # products = Product.query.paginate(page=page, per_page=app.config['POSTS_PER_PAGE']).items
+        result = products_schema.dump(products)
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getProducts"
+        })
+
+
 #Get store
 @app.route("/api/store/<int:id>", methods=['GET', 'POST'])
 def store(id):
@@ -700,7 +720,7 @@ def updateProduct(id):
             product.productname = form_data['productname'].strip()
             product.description = form_data['description'].strip()
             product.price  = form_data['price']
-            product.quantity = form_data['quantity']
+            product.quantity = form_data['quantity'] 
 
             #Query category by categoryname provided
             category_instance = Category.query.filter_by(category=form_data['category'].strip()).first()
@@ -717,6 +737,30 @@ def updateProduct(id):
     return jsonify({
             "route": "updateProduct"
     })
+
+#Update product Admin
+#Update product
+@app.route("/api/updateProductAdmin/<int:id>", methods=['PATCH', 'GET'])
+def updateProductAdmin(id):
+    if request.method == 'PATCH':
+        
+        #Get the form data
+        form_data = request.get_json()
+
+        #Query product with id
+        product = Product.query.get(id)
+
+        #Update product:
+        if product != None:
+            product.quantity = form_data["quantity"]
+            db.session.commit()
+            return jsonify({
+                "updatedProductAdmin": 200
+            })
+    return jsonify({
+            "route": "updateProductAdmin"
+    })
+
 
 #Update store
 @app.route("/api/updateStore/<int:id>", methods=['PATCH', 'GET'])
