@@ -1,5 +1,4 @@
-
-import { useParams } from "react-router-dom/cjs/react-router-dom.min"
+import "./DashboardManager.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faPhone, faAt, faStore, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
@@ -9,7 +8,7 @@ import FeedItem from "../sub-components/FeedItem/FeedItem";
 import useFetch from "../hooks/useFetch";
 
 
-const DashboardManager = ({userID}) => {
+const DashboardManager = () => {
     //Get id from session storage
     const object  = JSON.parse(sessionStorage.getItem("token"))
     
@@ -23,11 +22,6 @@ const DashboardManager = ({userID}) => {
 
     //Toggle deleteOverlay visibility
     const [displayDeleteOverlay, setDisplayDeleteOverlay] = useState(false)
-
-    /*
-     *Fetch Hero Data:
-     *---------------Product Count, Almost out, In Hand
-     */
 
      //Fetch product count
      const{data:products, error:errorProductCount} = useFetch("/api/getProductsAdmin/" + object.id)

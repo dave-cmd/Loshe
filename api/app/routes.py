@@ -2,6 +2,7 @@
 from crypt import methods
 import json
 from statistics import quantiles
+from traceback import print_tb
 from urllib import response
 from app import app, db
 from flask import jsonify, request
@@ -55,7 +56,8 @@ def login():
             return jsonify({
                 "token": secrets.token_hex(),
                 "id": user.id,
-                "role": role
+                "role": role,
+                "owner": user.owner
             })
         else:
             return jsonify({
@@ -438,7 +440,6 @@ def getOrders():
         dumped_orders = orders_schema.dump(orders)
         return jsonify(dumped_orders)
 
-
 #Get category
 @app.route("/api/category/<int:id>", methods=['GET', 'POST'])
 def category(id):
@@ -516,10 +517,11 @@ def getProducts():
 @app.route("/api/getProductsAdmin/<int:id>", methods=['GET', 'POST'])
 def getProductsAdmin(id):
     if request.method == 'GET':
-        #Get all staff
+        #Get all products
         products = Product.query.filter_by(owner=id)
-        # page = request.args.get('page', 1, type=int)
-        # products = Product.query.paginate(page=page, per_page=app.config['POSTS_PER_PAGE']).items
+
+        #filter products by [Warehouse]
+        products = products.filter_by(location = "Warehouse")
         result = products_schema.dump(products)
         print(result)
         return jsonify(result)
@@ -544,7 +546,6 @@ def getProductsAlmostOut(id):
         return jsonify({
         "route": "getProducts"
         })
-
 
 #Get store
 @app.route("/api/store/<int:id>", methods=['GET', 'POST'])
@@ -743,20 +744,95 @@ def updateProduct(id):
 @app.route("/api/updateProductAdmin/<int:id>", methods=['PATCH', 'GET'])
 def updateProductAdmin(id):
     if request.method == 'PATCH':
-        
         #Get the form data
         form_data = request.get_json()
 
-        #Query product with id
-        product = Product.query.get(id)
+        if "manager" in form_data:
+            #Query product with id
+            product = Product.query.get(id)
 
-        #Update product:
-        if product != None:
-            product.quantity = form_data["quantity"]
-            db.session.commit()
-            return jsonify({
-                "updatedProductAdmin": 200
-            })
+            #Get the deficit
+            deficit  = product.quantity - int(form_data['quantity'])
+
+            #Update product:
+            if product != None:
+                product.quantity = deficit
+
+                #Store
+                store = Store.query.filter_by(user_id=form_data['manager']).first()
+
+                #Filter product by [productname, store_id]
+                store_product = Product.query.filter_by(productname=product.productname)
+                store_product = store_product.filter_by(store_id=store.id).first()
+            
+
+                if store_product == None:
+                    #Create new order and product under the manager
+                    if int(form_data['quantity']) > 0:
+                        #Product
+                        new_product = Product(
+                                productname = Product.query.get(form_data['id']).productname,
+                                description = Product.query.get(form_data['id']).description,
+                                price = Product.query.get(form_data['id']).price,
+                                quantity = int(form_data['quantity']),
+                                location = Store.query.filter_by(user_id=form_data['manager']).first().storename,
+                                owner = form_data['owner'],
+                                store_id = store.id,
+                                category_id = Product.query.get(form_data['id']).category_id,
+                                orders = Product.query.get(form_data['id']).orders
+                        )
+
+                        #Order
+                        new_order = Order(
+                            quantity = int(form_data['quantity']),
+                            owner = form_data['owner'],
+                            store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
+                            product_id = new_product.id,
+                        )
+                        
+                        #Append relationship
+                        new_product.orders.append(new_order)
+
+                        #Stage the items
+                        db.session.add(new_product)
+                        db.session.add(new_order)
+                        print("New order created, & product")
+
+                    db.session.commit()
+                    return jsonify({
+                        "updatedProductAdmin": 200
+                    })
+
+                else:
+                    #Update the existing store product
+                    store_product.quantity  = store_product.quantity + int(form_data['quantity'])
+                    
+                    #Create a new order
+                    new_order = Order(
+                        quantity = int(form_data['quantity']),
+                        owner = form_data['owner'],
+                        store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
+                        product_id = store_product.id,
+                    )
+                    #Stage the items
+                    db.session.add(new_order)
+
+                    db.session.commit()
+                    return jsonify({
+                            "updatedProductAdmin": 200 })
+
+        else:
+
+            #Query product with id
+            product = Product.query.get(id)
+
+            #Update product:
+            if product != None:
+                product.quantity = int(form_data["quantity"])
+                db.session.commit()
+                return jsonify({
+                    "updatedProductAdmin": 200
+                })
     return jsonify({
             "route": "updateProductAdmin"
     })

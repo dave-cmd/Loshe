@@ -4,6 +4,8 @@ import "./RequestItem.css"
 import { useEffect, useState } from 'react'
 
 const RequestItem = (props) => {
+    //Logged in user object
+    const object = JSON.parse(sessionStorage.getItem('token'))
 
     //Post checker
     const[posting, setPosting] = useState(false)
@@ -29,7 +31,9 @@ const RequestItem = (props) => {
 
     //Onchange
     const changeHandler = (event)=>{
-        setForm(event.target.value)
+        setForm(prevState=>{
+            return {...prevState, quantity: event.target.value}
+        })
     }
 
     //Click +
@@ -51,7 +55,7 @@ const RequestItem = (props) => {
         })
     }
 
-    //Submit update
+    //Submit update admin
     const submitHandler = (event)=>{
         //Prevent form reload
         event.preventDefault()
@@ -81,6 +85,40 @@ const RequestItem = (props) => {
         })
     }
 
+
+    //Submit handler manager
+    const submitHandlerManager = (event)=>{
+        //Prevent reload on submit
+        event.preventDefault()
+
+        //Update admin product
+        //Post the form data
+        fetch("/api/updateProductAdmin/" + props.id, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({...form, id: props.id, manager:object.id, owner: object.owner})
+        })
+        .then(res=>{
+            if(!res.ok){
+                throw Error("An error occured in updating the product...")
+            }
+            return res.json()
+        })
+        .then(data=>{
+            console.log(data)
+            setPosting(false)
+        })
+        .catch(error=>{
+            console.log(error.message)
+            setPostingError(true)
+        })
+        //Create product if not exists
+
+        //Create record
+
+    }
+
+
     return (
             <div className="feed-item transparent">
                 <div className='icon-container'>
@@ -103,7 +141,8 @@ const RequestItem = (props) => {
                 </div>
 
                 <div className="send-container">
-                    <button className='button' onClick={(event)=>{submitHandler(event)}}>send</button>
+                    {object.role === "Manager" && <button className='button' onClick={(event)=>{submitHandlerManager(event)}}>Req</button>}
+                    {object.role === "Admin" && <button className='button' onClick={(event)=>{submitHandler(event)}}>Stock</button>}
                 </div>
             
             </div> 
