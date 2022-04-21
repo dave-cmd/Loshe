@@ -33,11 +33,12 @@ const DashboardManager = () => {
          productCount += products[i].quantity
      }
 
-     //Fetch orders
-     const{data:orders, error:errorOrders} = useFetch("/api/getOrders/")
+     //Fetch store orders
+     const{data:orders, error:errorOrders} = useFetch("/api/getStoreOrders/" +  data.id)
 
+     console.log(data)
 
-    //Map over orders
+    //Map over store orders
      const feedItems = orders.map(order=>{
         return <FeedItem key={order.id}
                          timestamp={order.timestamp}

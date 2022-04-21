@@ -435,12 +435,29 @@ def getOrder(id):
 @app.route("/api/getOrders", methods=['GET'])
 def getOrders():
     if request.method == 'GET':
-        orders = Order.query.all()
+        orders = Order.query.order_by(Order.timestamp.desc()).all()
+        dumped_orders = orders_schema.dump(orders)
+        return jsonify(dumped_orders)
+
+#Get OrdersAdmin [VERIFIED]
+@app.route("/api/getOrdersAdmin/<int:id>", methods=['GET'])
+def getOrdersAdmin(id):
+    if request.method == 'GET':
+        orders = Order.query.filter_by(owner=id).order_by(Order.timestamp.desc()).all()
         print(orders)
         dumped_orders = orders_schema.dump(orders)
         return jsonify(dumped_orders)
 
-#Get category
+#Get StoreOrders
+@app.route("/api/getStoreOrders/<int:id>", methods=['GET'])
+def getStoreOrders(id):
+    if request.method == 'GET':
+        orders = Order.query.filter_by(store_id=id).order_by(Order.timestamp.desc()).all()
+        print(orders)
+        dumped_orders = orders_schema.dump(orders)
+        return jsonify(dumped_orders)
+
+#Get Category
 @app.route("/api/category/<int:id>", methods=['GET', 'POST'])
 def category(id):
     if request.method == 'GET':
@@ -459,7 +476,7 @@ def category(id):
             }
         )
 
-#Get categories
+#Get Categories
 @app.route('/api/getCategories', methods=['GET', 'POST'])
 def getCategories():
     if request.method == 'GET':
@@ -481,7 +498,7 @@ def getCategories():
         "route": "getCategories"
         })
 
-#Get product
+#Get Product
 @app.route("/api/product/<int:id>", methods=['GET', 'POST'])
 def product(id):
     if request.method == 'GET':
@@ -496,7 +513,7 @@ def product(id):
             }
         )
 
-#Get products
+#Get Products
 @app.route("/api/getProducts", methods=['GET', 'POST'])
 def getProducts():
     if request.method == 'GET':
@@ -513,7 +530,7 @@ def getProducts():
         "route": "getProducts"
         })
 
-#Get products admin
+#Get ProductsAdmin
 @app.route("/api/getProductsAdmin/<int:id>", methods=['GET', 'POST'])
 def getProductsAdmin(id):
     if request.method == 'GET':
@@ -530,7 +547,7 @@ def getProductsAdmin(id):
         "route": "getProducts"
         })
 
-#Get products almost out admin
+#Get ProductsAlmostOut
 @app.route("/api/getProductsAlmostOut/<int:id>", methods=['GET', 'POST'])
 def getProductsAlmostOut(id):
     if request.method == 'GET':
@@ -547,7 +564,7 @@ def getProductsAlmostOut(id):
         "route": "getProducts"
         })
 
-#Get store
+#Get Store
 @app.route("/api/store/<int:id>", methods=['GET', 'POST'])
 def store(id):
     if request.method == 'GET':
@@ -566,7 +583,7 @@ def store(id):
             }
         )
 
-#Get store by manager ID
+#Get StoreManagerID
 @app.route("/api/storeByManager/<int:id>", methods=['GET', 'POST'])
 def storeManager(id):
     if request.method == 'GET':
@@ -585,7 +602,7 @@ def storeManager(id):
             }
         )
 
-#Get stores
+#Get Stores
 @app.route("/api/getStores")
 def getStore():
     if request.method == 'GET':
@@ -600,7 +617,7 @@ def getStore():
         "route": "getStores"
         })
 
-#Get stores by admin
+#Get StoresAdmin
 @app.route("/api/getStoresAdmin/<int:id>")
 def getStoresAdmin(id):
     if request.method == 'GET':
@@ -615,8 +632,7 @@ def getStoresAdmin(id):
         "route": "getStoresAdmin"
         })
 
-
-#Delete staff
+#Delete Staff
 @app.route("/api/deleteStaff/<int:id>", methods=['DELETE', 'GET'])
 def deleteStaff(id):
     if request.method == 'DELETE':
@@ -631,7 +647,7 @@ def deleteStaff(id):
         "route": "deleteStaff"
     })
 
-#Delete inventory
+#Delete Inventory
 @app.route("/api/deleteInventory/<int:id>", methods=['DELETE', 'GET'])
 def deleteInventory(id):
     if request.method == 'DELETE':
@@ -646,7 +662,7 @@ def deleteInventory(id):
         "route": "deleteInventory"
     })
 
-#Delete store
+#Delete Store
 @app.route("/api/deleteStore/<int:id>", methods=['DELETE', 'GET'])
 def deleteStore(id):
     if request.method == 'DELETE':
@@ -661,7 +677,7 @@ def deleteStore(id):
         "route": "deleteStore"
     })
 
-#Update staff
+#Update Staff
 @app.route("/api/updateStaff/<int:id>", methods=['PATCH', 'GET'])
 def updateStaff(id):
     #Get the form data
@@ -739,8 +755,7 @@ def updateProduct(id):
             "route": "updateProduct"
     })
 
-#Update product Admin
-#Update product
+#Update ProductAdmin
 @app.route("/api/updateProductAdmin/<int:id>", methods=['PATCH', 'GET'])
 def updateProductAdmin(id):
     if request.method == 'PATCH':
@@ -789,7 +804,7 @@ def updateProductAdmin(id):
                             store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
                             product_id = new_product.id,
                         )
-                        
+
                         #Append relationship
                         new_product.orders.append(new_order)
 
@@ -837,8 +852,7 @@ def updateProductAdmin(id):
             "route": "updateProductAdmin"
     })
 
-
-#Update store
+#Update Store
 @app.route("/api/updateStore/<int:id>", methods=['PATCH', 'GET'])
 def updateStore(id):
     if request.method == 'PATCH':

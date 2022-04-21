@@ -15,8 +15,8 @@ const Dashboard = ({isAuthorized, userID})=>{
     const history = useHistory()
 
     //Fetch orders
-    const{data:orders, error} =  useFetch("/api/getOrders")
-
+    const{data:orders, error} =  useFetch("/api/getOrdersAdmin/" + object.id)
+    
     //Map over orders
     const feedItems = orders.map(order=>{
         return <FeedItem key={order.id}
