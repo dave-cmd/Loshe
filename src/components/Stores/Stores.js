@@ -5,7 +5,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 
 
-const Stores = ({isAuthorized}) => {
+const Stores = () => {
     //Get id from session storage
     const object  = JSON.parse(sessionStorage.getItem("token"))
 
@@ -29,7 +29,7 @@ const Stores = ({isAuthorized}) => {
         {object.role !== "Admin" && <div>Unauthorized user.</div>}
         {object.role === "Admin" && <div className="wrapper-staff">
             <h1 className="staff-title">Stores</h1>
-            { data.length === 0 && error === null  && <div>Fetching resource...</div>}
+            { data.length === 0 && error === null  && <div>Fetching stores...</div>}
             {error === null && data.length > 0 && <div className="staff-list">{elements}</div>}
             { error !== null && <div>{error}</div>}
         </div>}

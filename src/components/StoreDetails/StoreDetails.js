@@ -24,30 +24,8 @@ const StoreDetails = () => {
     //Toggle deleteOverlay visibility
     const [displayDeleteOverlay, setDisplayDeleteOverlay] = useState(false)
 
-    /*
-     *Fetch Hero Data:
-     *---------------Product Count, Almost out, In Hand
-     */
-
-     //Fetch product count
-     const{data:products, error:errorProductCount} = useFetch("/api/getProducts")
-
-     //Implement reduce later TODO
-
-     let productCount = 0
-
-     for(let i=0; i<products.length; i++){
-         productCount += products[i].quantity
-     }
-
-     //TODO: Implement Almost Out
-     //TODO: Implement Sales
-     //Implement Request
-
-     //Implement Order/Transactions Feed
-
-     //Fetch product count
-     const{data:orders, error:errorOrders} = useFetch("/api/getOrders")
+    //Fetch Store Orders
+     const{data:orders, error:errorOrders} = useFetch("/api/getStoreOrders/" + id)
 
     //Map over orders
      const feedItems = orders.map(order=>{
@@ -65,9 +43,18 @@ const StoreDetails = () => {
     const phoneIcon = <FontAwesomeIcon className="phoneIcon" icon={faPhone} />
     const requestIcon = <FontAwesomeIcon className="requestIcon" icon={faPlusCircle} />
 
-    //Fetch from roles table
+    //Fetch manager role
     const {data:manager, error: errorRole} = useFetch('/api/staff/' + data.user_id)
-  
+
+    //Fetch store products
+    const {data:storeProducts, error: errorStoreProducts} = useFetch('/api/getStoreProducts/' + id)
+
+    let storeProductCount = 0
+
+    storeProducts.forEach(item=>{return storeProductCount += item.quantity})
+
+    console.log(storeProducts)
+
     //Activate delete overlay
     const activateDeleteOverlay = ()=>{
         setDisplayDeleteOverlay(!displayDeleteOverlay)
@@ -126,7 +113,7 @@ const StoreDetails = () => {
                     <div className="hero-section">
                         <div className="store-dashItem">
                             <div className="font bold">Products</div>
-                            <div className="font">{productCount}</div>
+                            <div className="font">{storeProductCount}</div>
                         </div>
                         <div className="store-dashItem">
                             <div className="font bold">Low Stock</div>

@@ -114,7 +114,7 @@ def signup():
         "route": "Sign up!"
     })
 
-#Create inventory
+#Create Inventory
 @app.route("/api/createInventory", methods=['POST', 'GET'])
 def createInventory():
 
@@ -190,7 +190,15 @@ def createInventory():
         "route": "Create Inventory!"
     })
 
-#Create store
+#Get StoreInventory
+def getStoreProducts(id):
+    if request.method == 'GET':
+        products = Product.query.filter_by(store_id=id).order_by(Order.timestamp.desc()).all()
+        print(products)
+        dumped_orders = orders_schema.dump(products)
+        return jsonify(dumped_orders)
+        
+#Create Store
 @app.route("/api/createStore", methods=['POST', 'GET'])
 def createStore():
 
@@ -294,7 +302,7 @@ def createStore():
         "route": "Create Store!"
     })
 
-#Create order
+#Create Order
 @app.route("/api/createOrder", methods=['GET', 'POST'])
 def createOrder():
     #Get json data
@@ -311,7 +319,7 @@ def createOrder():
             'route': 'createOrder'
         })
 
-#Get staff
+#Get Staff
 @app.route("/api/getStaff", methods=['GET', 'POST'])
 def getStaff():
     if request.method == 'GET':
@@ -379,7 +387,7 @@ def staff(id):
         
     return jsonify(user)
 
-#Get role
+#Get Role
 @app.route("/api/role/<int:id>", methods=['GET', 'POST'])
 def role(id):
     if request.method == 'GET':
@@ -398,7 +406,7 @@ def role(id):
             }
         )
 
-#Get roles
+#Get Roles
 @app.route("/api/getRoles", methods=['GET', 'POST'])
 def getRoles():
     if request.method == 'GET':
@@ -547,6 +555,20 @@ def getProductsAdmin(id):
         "route": "getProducts"
         })
 
+#Get ProductsStore
+@app.route("/api/getStoreProducts/<int:id>", methods=['GET', 'POST'])
+def getStoreProducts(id):
+    if request.method == 'GET':
+        #Get all products
+        products = Product.query.filter_by(store_id=id).order_by(Product.created_at.desc())
+        result = products_schema.dump(products)
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getProducts"
+        })
+        
 #Get ProductsAlmostOut
 @app.route("/api/getProductsAlmostOut/<int:id>", methods=['GET', 'POST'])
 def getProductsAlmostOut(id):

@@ -24,7 +24,7 @@ const DashboardManager = () => {
     const [displayDeleteOverlay, setDisplayDeleteOverlay] = useState(false)
 
      //Fetch product count
-     const{data:products, error:errorProductCount} = useFetch("/api/getProductsAdmin/" + object.id)
+     const{data:products, error:errorProductCount} = useFetch("/api/getStoreProducts/" + data.id)
 
      //Implement reduce later TODO
      let productCount = 0
