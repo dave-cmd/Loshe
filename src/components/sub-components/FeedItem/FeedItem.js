@@ -1,8 +1,11 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleRight, faArrowCircleDown} from '@fortawesome/free-solid-svg-icons'
+import { faAngleRight, faArrowCircleDown, faL} from '@fortawesome/free-solid-svg-icons'
 import "./FeedItem.css"
 import useFetch from '../../hooks/useFetch'
+import OrdersOverlay from '../../OrdersOverlay/OrdersOverlay'
+import { useState } from 'react'
+
 
 const FeedItem = (props) => {
 
@@ -27,24 +30,33 @@ const FeedItem = (props) => {
     const inIcon = <FontAwesomeIcon className='icon-body' icon={faArrowCircleDown} />
     const arrowRight = <FontAwesomeIcon className='icon-arrow' onClick={openItem} icon={faAngleRight} />
 
-    return ( 
-        <div className="feed-item">
-            <div className='icon-container'>
-                {inIcon}
-            </div>
-            <div className="info">
-                <div className="item-count font bold">{props.quantity}</div>
-                <div className="date font" >{dateConverter(props.timestamp)}</div>
-            </div>
-            <div className='feed-text'>
-                <div className="title font bold">{product.productname}</div>
-                <div className="shop-name font">{store.storename}</div>
-            </div>
-            <div className='icon-container'>
-                {arrowRight}
-            </div>
+
+    const[isOpen, setIsOpen] = useState(false)
+
+    return (
+        <>
+            <OrdersOverlay open={isOpen}  onClose={()=>setIsOpen(false)}>hello</OrdersOverlay>
             
-        </div>
+            <div className="feed-item" onClick={()=>{setIsOpen(true)}}>
+
+                <div className='icon-container'>
+                    {inIcon}
+                </div>
+                <div className="info">
+                    <div className="item-count font bold">{props.quantity}</div>
+                    <div className="date font" >{dateConverter(props.timestamp)}</div>
+                </div>
+                <div className='feed-text'>
+                    <div className="title font bold">{product.productname}</div>
+                    <div className="shop-name font">{store.storename}</div>
+                </div>
+                <div className='icon-container'>
+                    {arrowRight}
+                </div>
+                
+            </div>
+        </>
+
      );
 }
  

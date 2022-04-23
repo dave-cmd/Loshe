@@ -16,14 +16,16 @@ const Dashboard = ({isAuthorized, userID})=>{
 
     //Fetch orders
     const{data:orders, error} =  useFetch("/api/getOrdersAdmin/" + object.id)
-    
+
     //Map over orders
     const feedItems = orders.map(order=>{
-        return <FeedItem key={order.id}
-                         timestamp={order.timestamp}
-                         quantity={order.quantity}
-                         store_id={order.store_id}
-                         product_id = {order.product_id}/>
+        return (
+                <FeedItem key={order.id}
+                                timestamp={order.timestamp}
+                                quantity={order.quantity}
+                                store_id={order.store_id}
+                                product_id = {order.product_id}
+                />)
     })
 
     //Fetch products
@@ -33,7 +35,6 @@ const Dashboard = ({isAuthorized, userID})=>{
     let products_count = 0
 
     products.forEach(p =>products_count += p.quantity)
-
 
     //Fetch stores
     const{data:stores, storesError} =  useFetch("/api/getStoresAdmin/" + object.id)
@@ -63,6 +64,7 @@ const Dashboard = ({isAuthorized, userID})=>{
     const goToAlmostOut = ()=>{
         history.push("/inventoryAlmostOut")
     }
+
 
 
     return ( 

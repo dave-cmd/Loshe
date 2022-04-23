@@ -8,7 +8,7 @@ const DeleteOverlay = ({id, deleteStaff, display, setDisplay, deleteError, setDe
                         <div className="deleteText bold">Are you sure?</div>
                         <div className="delete-confirmation">
                                 <div className="action update"
-                                     onClick={()=>{deleteStaff(id)}}>Yes</div>
+                                     >Yes</div>
                                 <div className="action delete" onClick={()=>{setDisplay(!display);}}> No </div>
                         </div>
                 </div>

@@ -29,14 +29,17 @@ const DashboardManager = () => {
      //Implement reduce later TODO
      let productCount = 0
 
-     for(let i=0; i<products.length; i++){
-         productCount += products[i].quantity
-     }
+     products.forEach(item=>productCount += item.quantity)
+
+    //Fetch store products almost out
+    const {data:storeProductsAlmostOut, error: errorStoreProductsAmostOut} = useFetch('/api/getStoreProductsAlmostOut/' + data.id)
+
+    let storeProductsAlmostOutCount = 0
+
+    storeProductsAlmostOut.forEach(item=>{ return storeProductsAlmostOutCount += 1})
 
      //Fetch store orders
      const{data:orders, error:errorOrders} = useFetch("/api/getStoreOrders/" +  data.id)
-
-     console.log(data)
 
     //Map over store orders
      const feedItems = orders.map(order=>{
@@ -85,11 +88,6 @@ const DashboardManager = () => {
         })
     }
 
-    //Redirect to update
-    // const redirectToUpdate = ()=>{
-    //     history.push("/updateStoreDetails/" + id);
-    // }
-
     //Redirect to request
     const redirectToRequest = ()=>{
         history.push("/request/");
@@ -119,11 +117,11 @@ const DashboardManager = () => {
                         </div>
                         <div className="store-dashItem">
                             <div className="font bold">Low Stock</div>
-                            <div className="font">12000</div>
+                            <div className="font">{storeProductsAlmostOutCount}</div>
                         </div>
                         <div className="store-dashItem">
                             <div className=" font bold">Sold</div>
-                            <div className="font">12000</div>
+                            <div className="font">--</div>
                         </div>
                     </div>
 

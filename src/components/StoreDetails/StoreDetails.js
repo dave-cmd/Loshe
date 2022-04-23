@@ -53,7 +53,12 @@ const StoreDetails = () => {
 
     storeProducts.forEach(item=>{return storeProductCount += item.quantity})
 
-    console.log(storeProducts)
+    //Fetch store products almost out
+    const {data:storeProductsAlmostOut, error: errorStoreProductsAmostOut} = useFetch('/api/getStoreProductsAlmostOut/' + id)
+
+    let storeProductsAlmostOutCount = 0
+
+    storeProductsAlmostOut.forEach(item=>{ return storeProductsAlmostOutCount += 1})
 
     //Activate delete overlay
     const activateDeleteOverlay = ()=>{
@@ -117,11 +122,11 @@ const StoreDetails = () => {
                         </div>
                         <div className="store-dashItem">
                             <div className="font bold">Low Stock</div>
-                            <div className="font">12000</div>
+                            <div className="font">{storeProductsAlmostOutCount}</div>
                         </div>
                         <div className="store-dashItem">
                             <div className=" font bold">Sold</div>
-                            <div className="font">12000</div>
+                            <div className="font">--</div>
                         </div>
                     </div>
 

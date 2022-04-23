@@ -1,5 +1,5 @@
 import "./InventoryDetails.css"
-import { Redirect, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import {  useParams } from "react-router-dom/cjs/react-router-dom.min";
 import useFetch from "../hooks/useFetch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faPhone, faAt, } from '@fortawesome/free-solid-svg-icons'
@@ -11,7 +11,6 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 const InventoryDetails = () => {
     const {id} = useParams();
     const{data, error, isFetching} = useFetch('/api/product/' + id)
-    console.log(data)
 
     //Delete error
     const[deleteError, setDeleteError] = useState(false)
@@ -22,8 +21,8 @@ const InventoryDetails = () => {
     //Toggle deleteOverlay visibility
     const [displayDeleteOverlay, setDisplayDeleteOverlay] = useState(false)
 
-    //Delete activation
-    const [deleteActive, setDeleteActive] = useState(false)
+    // //Delete activation
+    // const [deleteActive, setDeleteActive] = useState(false)
    
     //Icons
     const profileIcon = <FontAwesomeIcon className="profileIcon" icon={faUser} />
@@ -66,7 +65,7 @@ const InventoryDetails = () => {
         history.push("/updateInventoryDetails/" + id);
     }
 
-    console.log(deleteActive)
+    // console.log(deleteActive)
     return ( 
         
         <div className="wrapper-staff-details">

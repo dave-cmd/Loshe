@@ -197,7 +197,7 @@ def getStoreProducts(id):
         print(products)
         dumped_orders = orders_schema.dump(products)
         return jsonify(dumped_orders)
-        
+
 #Create Store
 @app.route("/api/createStore", methods=['POST', 'GET'])
 def createStore():
@@ -586,6 +586,23 @@ def getProductsAlmostOut(id):
         "route": "getProducts"
         })
 
+#Get StoreProductsAlmostOut
+@app.route("/api/getStoreProductsAlmostOut/<int:id>", methods=['GET', 'POST'])
+def getStoreProductsAlmostOut(id):
+    if request.method == 'GET':
+        #Get all staff
+        products = Product.query.filter_by(store_id=id)
+        products = products.filter(Product.quantity < app.config["ALMOST_OUT"])
+        # page = request.args.get('page', 1, type=int)
+        # products = Product.query.paginate(page=page, per_page=app.config['POSTS_PER_PAGE']).items
+        result = products_schema.dump(products)
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": "getStoreProductsAlmostOut"
+        })
+    
 #Get Store
 @app.route("/api/store/<int:id>", methods=['GET', 'POST'])
 def store(id):
