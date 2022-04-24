@@ -31,11 +31,21 @@ const FeedItem = (props) => {
     const arrowRight = <FontAwesomeIcon className='icon-arrow' onClick={openItem} icon={faAngleRight} />
 
 
+    //Overlay toggle
     const[isOpen, setIsOpen] = useState(false)
 
     return (
         <>
-            <OrdersOverlay open={isOpen}  onClose={()=>setIsOpen(false)}>hello</OrdersOverlay>
+            <OrdersOverlay open={isOpen}
+                           onClose={()=>setIsOpen(false)}
+                           store={store}
+                           timestamp= {props.timestamp}
+                           dateConverter={dateConverter}
+                           quantity={props.quantity}
+                           status={props.status}
+                           orderID={props.orderID}
+                           owner={props.owner}
+                           product={product}></OrdersOverlay>
             
             <div className="feed-item" onClick={()=>{setIsOpen(true)}}>
 
@@ -49,6 +59,9 @@ const FeedItem = (props) => {
                 <div className='feed-text'>
                     <div className="title font bold">{product.productname}</div>
                     <div className="shop-name font">{store.storename}</div>
+                </div>
+                <div className='feed-status'>
+                    <div className={`status-${props.status}`}>{props.status}</div>
                 </div>
                 <div className='icon-container'>
                     {arrowRight}

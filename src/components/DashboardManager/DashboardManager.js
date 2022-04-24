@@ -46,7 +46,9 @@ const DashboardManager = () => {
         return <FeedItem key={order.id}
                          timestamp={order.timestamp}
                          quantity={order.quantity}
+                         status={order.status}
                          store_id={order.store_id}
+                         orderID={order.id}
                          product_id = {order.product_id}/>
                          })
 
@@ -126,6 +128,7 @@ const DashboardManager = () => {
                     </div>
 
                     <div className="feed-section">
+                        {orders.length === 0 && <div className="orders-font">Orders currenly unavailable</div>}
                         {feedItems}
                     </div>
                     <div className="contact-section">

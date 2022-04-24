@@ -313,7 +313,8 @@ def createOrder():
         Order( 
             quantity = json_data['quantity'],
             store_id = json_data['store_id'],
-            product_id = json_data['order_id']
+            product_id = json_data['order_id'],
+            # owner = json_data['owner']
         )
     return jsonify({
             'route': 'createOrder'
@@ -830,7 +831,7 @@ def updateProductAdmin(id):
                                 price = Product.query.get(form_data['id']).price,
                                 quantity = int(form_data['quantity']),
                                 location = Store.query.filter_by(user_id=form_data['manager']).first().storename,
-                                owner = form_data['owner'],
+                                owner = int(form_data['owner']),
                                 store_id = store.id,
                                 category_id = Product.query.get(form_data['id']).category_id,
                                 orders = Product.query.get(form_data['id']).orders
@@ -839,7 +840,7 @@ def updateProductAdmin(id):
                         #Order
                         new_order = Order(
                             quantity = int(form_data['quantity']),
-                            owner = form_data['owner'],
+                            owner = int(form_data['owner']),
                             store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
                             product_id = new_product.id,
                         )
@@ -864,7 +865,7 @@ def updateProductAdmin(id):
                     #Create a new order
                     new_order = Order(
                         quantity = int(form_data['quantity']),
-                        owner = form_data['owner'],
+                        owner = int(form_data['owner']),
                         store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
                         product_id = store_product.id,
                     )
@@ -918,4 +919,28 @@ def updateStore(id):
         "route": "updateStore"
     })
 
+#Update Order
+@app.route("/api/updateOrder/<int:id>", methods=['PATCH', 'GET'])
+def updateOrder(id):
+    if request.method == 'PATCH':
+        #Get form data
+        form_data = request.get_json()
 
+        #Create an order instance
+        order = Order.query.get(id)
+
+        #Update order instance with form data
+        if order!= None:
+            order.status = form_data['status'].strip()
+
+        #TODO: Update manager
+
+        #Commit changes to database
+        db.session.commit()
+   
+        return jsonify({
+            "updateOrder": 200
+        })
+    return jsonify ({
+        "route": "updateOrder"
+    })

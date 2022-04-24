@@ -83,6 +83,7 @@ class Order(db.Model):
     quantity = db.Column(db.Integer(), index=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     owner = db.Column(db.Integer(), index=True, nullable=True)
+    status= db.Column(db.String(128), index=True, nullable=True, default="Pending")
     updated_at = db.Column(db.DateTime, index=True, nullable=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))

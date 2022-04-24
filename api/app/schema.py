@@ -27,4 +27,4 @@ class StoreSchema(ma.Schema):
 
 class OrderSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'quantity', 'timestamp','created_at', 'updated_at', 'owner', 'product_id', 'store_id')
+        fields = ('id', 'quantity', 'timestamp', 'status','created_at', 'updated_at', 'owner', 'product_id', 'store_id')

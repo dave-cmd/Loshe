@@ -16,10 +16,12 @@ const Request = () => {
                              id = {prod.id}
                              productname={prod.productname}
                              location={prod.location}
-                             quantity={prod.quantity}/> 
+                             quantity={prod.quantity}
+                             owner={prod.owner}
+                             /> 
     })
 
-    console.log(object)
+    // console.log(object)
     
     return ( <div className="wrapper-staff-details">
                 <div className="name-section">
@@ -33,7 +35,6 @@ const Request = () => {
                 </div>
 
                 <div className="action-section height display">
-
                     {elements}
                 </div>
 

@@ -23,7 +23,10 @@ const Dashboard = ({isAuthorized, userID})=>{
                 <FeedItem key={order.id}
                                 timestamp={order.timestamp}
                                 quantity={order.quantity}
+                                status={order.status}
                                 store_id={order.store_id}
+                                orderID={order.id}
+                                owner={order.owner}
                                 product_id = {order.product_id}
                 />)
     })
@@ -84,6 +87,7 @@ const Dashboard = ({isAuthorized, userID})=>{
             <div className="action-section">Recent Activity</div>
 
             <div className="feed-section">
+                {orders.length === 0 && <div className="orders-font">Orders currently unavailable.</div>}
                 {feedItems}
             </div>
 
