@@ -444,7 +444,7 @@ def getOrder(id):
 @app.route("/api/getOrders", methods=['GET'])
 def getOrders():
     if request.method == 'GET':
-        orders = Order.query.order_by(Order.timestamp.desc()).all()
+        orders = Order.query.order_by(Order.created_at.desc()).all()
         dumped_orders = orders_schema.dump(orders)
         return jsonify(dumped_orders)
 
@@ -452,8 +452,7 @@ def getOrders():
 @app.route("/api/getOrdersAdmin/<int:id>", methods=['GET'])
 def getOrdersAdmin(id):
     if request.method == 'GET':
-        orders = Order.query.filter_by(owner=id).order_by(Order.timestamp.desc()).all()
-        print(orders)
+        orders = Order.query.filter_by(owner=id).order_by(Order.updated_at.desc()).all()
         dumped_orders = orders_schema.dump(orders)
         return jsonify(dumped_orders)
 
@@ -461,7 +460,7 @@ def getOrdersAdmin(id):
 @app.route("/api/getStoreOrders/<int:id>", methods=['GET'])
 def getStoreOrders(id):
     if request.method == 'GET':
-        orders = Order.query.filter_by(store_id=id).order_by(Order.timestamp.desc()).all()
+        orders = Order.query.filter_by(store_id=id).order_by(Order.updated_at.desc()).all()
         print(orders)
         dumped_orders = orders_schema.dump(orders)
         return jsonify(dumped_orders)
@@ -576,6 +575,7 @@ def getProductsAlmostOut(id):
     if request.method == 'GET':
         #Get all staff
         products = Product.query.filter_by(owner=id)
+        products = products.filter_by(location="Warehouse")
         products = products.filter(Product.quantity < app.config["ALMOST_OUT"])
         # page = request.args.get('page', 1, type=int)
         # products = Product.query.paginate(page=page, per_page=app.config['POSTS_PER_PAGE']).items
@@ -597,7 +597,6 @@ def getStoreProductsAlmostOut(id):
         # page = request.args.get('page', 1, type=int)
         # products = Product.query.paginate(page=page, per_page=app.config['POSTS_PER_PAGE']).items
         result = products_schema.dump(products)
-        print(result)
         return jsonify(result)
     else:
         return jsonify({
@@ -727,6 +726,7 @@ def updateStaff(id):
         
         staff.firstname = form_data['firstname'].strip()
         staff.lastname = form_data['lastname'].strip()
+        staff.updated_at = datetime.utcnow()
         staff.role_id = Role.query.filter_by(role=form_data['role'].strip()).first().id
 
         #check if phone number already exixts
@@ -778,6 +778,7 @@ def updateProduct(id):
             product.description = form_data['description'].strip()
             product.price  = form_data['price']
             product.quantity = form_data['quantity'] 
+            product.updated_at = datetime.utcnow()
 
             #Query category by categoryname provided
             category_instance = Category.query.filter_by(category=form_data['category'].strip()).first()
@@ -861,6 +862,7 @@ def updateProductAdmin(id):
                 else:
                     #Update the existing store product
                     store_product.quantity  = store_product.quantity + int(form_data['quantity'])
+                    store_product.updated_at = datetime.utcnow()
                     
                     #Create a new order
                     new_order = Order(
@@ -884,6 +886,7 @@ def updateProductAdmin(id):
             #Update product:
             if product != None:
                 product.quantity = int(form_data["quantity"])
+                product.updated_at = datetime.utcnow()
                 db.session.commit()
                 return jsonify({
                     "updatedProductAdmin": 200
@@ -906,6 +909,7 @@ def updateStore(id):
         if store!= None:
             store.storename = form_data['storename'].strip()
             store.region = form_data['region'].strip()
+            store.update_at = datetime.utcnow()
 
         #TODO: Update manager
 
@@ -932,8 +936,8 @@ def updateOrder(id):
         #Update order instance with form data
         if order!= None:
             order.status = form_data['status'].strip()
+            order.updated_at = datetime.utcnow()
 
-        #TODO: Update manager
 
         #Commit changes to database
         db.session.commit()

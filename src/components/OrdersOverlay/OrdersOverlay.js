@@ -4,6 +4,7 @@ import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { useState } from "react"
 
 const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dateConverter, store, owner, orderID})=>{
+
     //Set posting
     const[posting, setPosting] = useState(false)
     const[postingError, setPostingError] = useState(false)
@@ -38,6 +39,7 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
         })
         .then(data=>{
             console.log(data)
+            onClose()
             setPosting(false)
         })
         .catch(error=>{

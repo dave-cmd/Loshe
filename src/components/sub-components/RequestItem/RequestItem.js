@@ -91,8 +91,9 @@ const RequestItem = (props) => {
         //Prevent reload on submit
         event.preventDefault()
 
-        //Update admin product
-        //Post the form data
+        //Set posting
+        setPosting(true)
+        
         fetch("/api/updateProductAdmin/" + props.id, {
             method: 'PATCH',
             headers: {'Content-Type': 'application/json'},
@@ -112,9 +113,6 @@ const RequestItem = (props) => {
             console.log(error.message)
             setPostingError(true)
         })
-        //Create product if not exists
-
-        //Create record
 
     }
 
@@ -141,7 +139,7 @@ const RequestItem = (props) => {
                 </div>
 
                 <div className="send-container">
-                    {object.role === "Manager" && <button className='button' onClick={(event)=>{submitHandlerManager(event)}}>Req</button>}
+                    {object.role === "Manager" && <button className='button' onClick={(event)=>{submitHandlerManager(event)}}>{posting ? "..." : "Req"}</button>}
                     {object.role === "Admin" && <button className='button' onClick={(event)=>{submitHandler(event)}}>Stock</button>}
                 </div>
             
