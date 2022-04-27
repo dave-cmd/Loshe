@@ -129,10 +129,13 @@
     box-sizing: border-box;
     text-decoration:none;
     font-family:'Roboto',sans-serif;
-    font-weight:300;
+    font-weight:600;
     color:#FFFFFF;
+    /* color: black; */
     text-align:center;
     transition: all 0.2s;
+    background-color:#00FFFF;
+    border: none;
     }
 
 .update:hover{

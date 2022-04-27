@@ -773,11 +773,11 @@ def updateProduct(id):
         product = Product.query.get(id)
 
         #Update product:
-        if product != None:
+        if product != None and int(form_data["quantity"]) >= 0:
             product.productname = form_data['productname'].strip()
             product.description = form_data['description'].strip()
             product.price  = form_data['price']
-            product.quantity = form_data['quantity'] 
+            product.quantity = int(form_data['quantity'] )
             product.updated_at = datetime.utcnow()
 
             #Query category by categoryname provided
@@ -811,7 +811,7 @@ def updateProductAdmin(id):
             deficit  = product.quantity - int(form_data['quantity'])
 
             #Update product:
-            if product != None:
+            if product != None and deficit >= 0:
                 product.quantity = deficit
 
                 #Store
@@ -884,7 +884,7 @@ def updateProductAdmin(id):
             product = Product.query.get(id)
 
             #Update product:
-            if product != None:
+            if product != None and int(form_data["quantity"]) >= 0:
                 product.quantity = int(form_data["quantity"])
                 product.updated_at = datetime.utcnow()
                 db.session.commit()
