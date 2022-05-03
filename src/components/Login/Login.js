@@ -60,20 +60,24 @@ const Login = ({setToken, setIsAuthorized, setUserID}) => {
         <>
         {visible.login === true &&   <div className="login-wrapper">
                 <h1>Login</h1> 
-                <form onSubmit={submitHandler} className="action">
+                <form onSubmit={submitHandler} className="login-form">
                     <label>
-                        <p>Email</p>
+                        {/* <p>Email</p> */}
                         <input type="email"
-                            required 
+                            
+                            className="login-inputs" 
                             onChange={changeHandler}
                             name="email"
+                            placeholder="Email"
                             value={loginForm.email}/>
                     </label>
                     <label>
-                        <p>Password</p>
+                        {/* <p>Password</p> */}
                         <input type="password" onChange={changeHandler}
                             required
+                            className="login-inputs"
                             name="password"
+                            placeholder="Password"
                             value={loginForm.password} />
                     </label>
                     <div className="buttons">

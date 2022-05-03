@@ -13,7 +13,11 @@ const StoreDetails = () => {
     //Get id from parameter
     const {id} = useParams();
 
-    const{data, error, isFetching} = useFetch('/api/store/' + id)
+    // const{data, error, isFetching} = useFetch('/api/store/' + id)
+    const{data, error, isFetching} = useFetch('/api/getStoreId/' + id)
+
+
+    console.log(data)
 
     //Delete error
     const[deleteError, setDeleteError] = useState(false)
@@ -46,7 +50,7 @@ const StoreDetails = () => {
     const requestIcon = <FontAwesomeIcon className="requestIcon" icon={faPlusCircle} />
 
     //Fetch manager role
-    const {data:manager, error: errorRole} = useFetch('/api/staff/' + data.user_id)
+    // const {data:manager, error: errorRole} = useFetch('/api/staff/' + data.user_id)
 
     //Fetch store products
     const {data:storeProducts, error: errorStoreProducts} = useFetch('/api/getStoreProducts/' + id)
@@ -141,25 +145,25 @@ const StoreDetails = () => {
                             {phoneIcon}
                             <div className="phone-subsection">
                                 <div className="font bold">PHONE</div>
-                                <div className="font">{manager.phone}</div>
+                                <div className="font">{data.users.phone}</div>
                             </div>
                         </div>
                         <div className="email-details">
                             {emailIcon}
                             <div className="email-subsection">
                                 <div className="font bold">EMAIL</div>
-                                <div className="font">{manager.email}</div>
+                                <div className="font">{data.users.email}</div>
                             </div>
                         </div>
                     </div>
                     <div className="store-section">
                         <div className="font bold">Manager:</div>
-                        <div className="font">{manager.firstname} {manager.lastname}</div>
+                        <div className="font">{data.users.firstname} {data.users.lastname}</div>
                     </div>
                     <div className="action-section">
                         <div className="action update" onClick={redirectToUpdate}>Update</div>
                         <div className="action delete" onClick={()=>{activateDeleteOverlay();}}>Delete</div>
-                        <div className="action delete" onClick={()=>{redirectToRequest()}}>Request</div>
+                        {/* <div className="action delete" onClick={()=>{redirectToRequest()}}>Request</div> */}
                     </div>
                 </>)
             }

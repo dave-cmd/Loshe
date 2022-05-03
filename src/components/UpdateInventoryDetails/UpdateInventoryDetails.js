@@ -67,7 +67,8 @@ const UpdateInventoryDetails = () => {
         })
         .then(data=>{
             console.log(data);
-            history.push("/inventory/"+ id)
+            // history.push("/inventory/"+ id)
+            history.push("/getInventory")
         })
         .catch(e=>{
             console.warn(e.message);

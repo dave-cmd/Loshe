@@ -5,14 +5,62 @@
     align-items: center;
     justify-content: center;
     color: rgba(0,0,0, 0.6);
+    background-color: white;
+}
+
+label {
+    width: 100%;
+}
+
+.signup-form {
+    width: 90%;
+}
+
+.signup-inputs {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 2px;
+    
 }
 
 .buttons {
     display: flex;
-    justify-content: space-between;
-    margin-top: 25px;
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 20px;
+
+
 }
 
 .buttons > button {
-    color: rgba(0,0,0, 0.6);
+    /* background-color: #4CAF50; Green */
+    background-color: transparent;
+    /* border: none; */
+    border: solid 2px rgba(0,0,0, 0.6);
+    color: rgba(0,0,0, 0.6);;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+
+@media screen and (min-width: 600px) {
+    .signup-form {
+        width: 50%;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .signup-form {
+        width: 20%;
+    }
 }

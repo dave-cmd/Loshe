@@ -3,12 +3,12 @@ from app import ma
 
 class RoleSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'role', 'description', 'created_at', 'updated_at', 'user_id')
+        fields = ('id', 'role', 'description', 'created_at', 'updated_at', 'user')
 
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'firstname', 'lastname', 'email', 'phone','created_at', 'updated_at', 'owner', 'password_hash', 'store', 'role_id')
+        fields = ('id', 'firstname', 'lastname', 'email', 'phone','created_at', 'updated_at', 'owner', 'password_hash', 'store_id', 'role_id')
 
 
 class CategorySchema(ma.Schema):
@@ -22,7 +22,7 @@ class ProductSchema(ma.Schema):
 
 class StoreSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'storename', 'region' ,'created_at', 'updated_at', 'owner', 'user_id')
+        fields = ('id', 'storename', 'region' ,'created_at', 'updated_at', 'owner', 'users')
 
 
 class OrderSchema(ma.Schema):

@@ -56,6 +56,23 @@
     transition: all 0.2s;
     }
 
+.delete-button-background {
+    /* background-color: #4CAF50; Green */
+    background-color: red;
+    border: none;
+    /* border: solid 2px rgba(0,0,0, 0.6); */
+    /* color: rgba(0,0,0, 0.6); */
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
 .update:hover{
     color:#FFFFFF;
     background-color:#00FFFF

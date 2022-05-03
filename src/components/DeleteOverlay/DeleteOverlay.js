@@ -5,11 +5,10 @@ const DeleteOverlay = ({id, deleteStaff, display, setDisplay, deleteError, setDe
                   style={display? {display: "block"}: {display: "none"}}>
                 <div className="text-container">
                         {deleteError === false && <div className="error-message">{deleteError}</div>}
-                        <div className="deleteText bold">Are you sure?</div>
+                        <div className="deleteText bold">Confirm delete?</div>
                         <div className="delete-confirmation">
-                                <div className="action update"
-                                     >Yes</div>
-                                <div className="action delete" onClick={()=>{setDisplay(!display);}}> No </div>
+                                <div className=" delete-button-background" onClick={()=>{deleteStaff(id)}}>{deleteError ? 'Error deleting resource': 'Yes'}</div>
+                                <div className="action update" onClick={()=>{setDisplay(!display);}}> No </div>
                         </div>
                 </div>
              </div> );

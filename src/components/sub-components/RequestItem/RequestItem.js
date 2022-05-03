@@ -2,9 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload } from '@fortawesome/free-solid-svg-icons'
 import "./RequestItem.css"
 import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 const RequestItem = (props) => {
+    //Redirect handler
+    const history = useHistory()
+
     //Logged in user object
+
     const object = JSON.parse(sessionStorage.getItem('token'))
 
     //Post checker
@@ -71,13 +76,14 @@ const RequestItem = (props) => {
         })
         .then(res=>{
             if(!res.ok){
-                throw Error("An error occured in updating the product...")
+                throw Error("An error occured in updating the product...1")
             }
             return res.json()
         })
         .then(data=>{
             console.log(data)
             setPosting(false)
+            history.push("/getInventory")
         })
         .catch(error=>{
             console.log(error.message)
@@ -97,17 +103,18 @@ const RequestItem = (props) => {
         fetch("/api/updateProductAdmin/" + props.id, {
             method: 'PATCH',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({...form, id: props.id, manager:object.id, owner: object.owner})
+            body: JSON.stringify({...form, id: props.id, manager:object.id, owner: object.owner, storeId: object.store})
         })
         .then(res=>{
             if(!res.ok){
-                throw Error("An error occured in updating the product...")
+                throw Error("An error occured in updating the product...2")
             }
             return res.json()
         })
         .then(data=>{
             console.log(data)
             setPosting(false)
+            history.push("/")
         })
         .catch(error=>{
             console.log(error.message)

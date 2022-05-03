@@ -1,8 +1,6 @@
 
 from crypt import methods
 import json
-from statistics import quantiles
-from traceback import print_tb
 from urllib import response
 from app import app, db
 from flask import jsonify, request
@@ -57,7 +55,9 @@ def login():
                 "token": secrets.token_hex(),
                 "id": user.id,
                 "role": role,
-                "owner": user.owner
+                "owner": user.owner,
+                "store": user.store_id
+
             })
         else:
             return jsonify({
@@ -207,12 +207,12 @@ def createStore():
         json_data = request.get_json()
 
         #Product and Category instances
-        store = Store.query.filter_by(storename=json_data["storename"]).first()
-        store_manager = User.query.filter_by(email=json_data["email"]).first()
+        store = Store.query.filter_by(storename=json_data["storename"].strip()).first()
+        store_manager = User.query.filter_by(email=json_data["email"].strip()).first()
         store_manager_phone = User.query.filter_by(phone=json_data["phone"]).first()
 
         #roles
-        user_role = Role.query.filter_by(role=json_data['permission']).first()
+        user_role = Role.query.filter_by(role=json_data['permission'].strip()).first()
 
         if store != None:
             print("Store already exists!")
@@ -223,13 +223,13 @@ def createStore():
         elif store == None and store_manager == None and store_manager_phone == None:
             #Store manager instance
             manager = User(
-                firstname = json_data['firstname'],
-                lastname = json_data['lastname'],
-                email = json_data['email'],
+                firstname = json_data['firstname'].strip(),
+                lastname = json_data['lastname'].strip(),
+                email = json_data['email'].strip(),
                 phone = json_data['phone'],
                 owner = json_data['owner']
             )
-            manager.set_password(json_data['password'])
+            manager.set_password(json_data['password'].strip())
 
             #Store instance
             post_store = Store(
@@ -242,7 +242,8 @@ def createStore():
                 user_role.user.append(manager)
             
             
-            manager.store.append(post_store)
+            # manager.store.append(post_store)
+            post_store.users.append(manager)
 
             db.session.add(manager)
             db.session.add(post_store)
@@ -251,19 +252,20 @@ def createStore():
             print(user_role.role)
 
             return jsonify({
-                "status": "Resource created 1."
+                "Success": "Resource created 1."
             })
 
         elif store == None and store_manager != None:
             #Product instance
             post_store = Store(
-                storename = json_data['storename'],
-                region= json_data['region'],
+                storename = json_data['storename'].strip(),
+                region= json_data['region'].strip(),
                 owner = json_data['owner']
             )
 
             #Append Store instance to User instance backref
-            store_manager.store.append(post_store)
+            # store_manager.store.append(post_store)
+            post_store.users.append(store_manager)
             
             if user_role != None:
                 user_role.user.append(store_manager)
@@ -274,19 +276,20 @@ def createStore():
             print("Successfully added store to an existing manager!")
 
             return jsonify({
-                "status": "Resource Created 2!"
+                "Success": "Resource Created 2!"
             })
 
         elif store == None and store_manager_phone != None:
             #Product instance
             post_store = Store(
-                storename = json_data['storename'],
-                region= json_data['region'],
+                storename = json_data['storename'].strip(),
+                region= json_data['region'].strip(),
                 owner = json_data['owner']
             )
 
             #Append Store instance to User instance backref
-            store_manager_phone.store.append(post_store)
+            # store_manager_phone.store.append(post_store)
+            post_store.users.append(store_manager_phone)
             user_role.user.append(store_manager)
 
             #Stage and commit 
@@ -295,7 +298,7 @@ def createStore():
             print("Successfully added store to an existing manager phone!")
 
             return jsonify({
-                "status": "Resource Created 3!"
+                "Success": "Resource Created 3!"
             })
 
     return jsonify({
@@ -329,11 +332,11 @@ def getStaff():
         result = users_schema.dump(users)
 
         # serialize the AppenderBaseQueryProperty
-        for user in result:
-            if len(list(user['store']) ) <= 1:
-                user['store'] = user_schema.dump(user['store'])
-            elif len(list(user['store']) ) > 1:
-                user['store'] = users_schema.dump(user['store'])
+        # for user in result:
+        #     if len(list(user['store']) ) <= 1:
+        #         user['store'] = user_schema.dump(user['store'])
+        #     elif len(list(user['store']) ) > 1:
+        #         user['store'] = users_schema.dump(user['store'])
         
         print(result)
         return jsonify(result)
@@ -351,11 +354,11 @@ def getStaffAdmin(id):
         result = users_schema.dump(users)
 
         # serialize the AppenderBaseQueryProperty
-        for user in result:
-            if len(list(user['store']) ) <= 1:
-                user['store'] = user_schema.dump(user['store'])
-            elif len(list(user['store']) ) > 1:
-                user['store'] = users_schema.dump(user['store'])
+        # for user in result:
+        #     if len(list(user['store']) ) <= 1:
+        #         user['store'] = user_schema.dump(user['store'])
+        #     elif len(list(user['store']) ) > 1:
+        #         user['store'] = users_schema.dump(user['store'])
         
         print(result)
         return jsonify(result)
@@ -372,19 +375,19 @@ def staff(id):
         user = User.query.filter_by(id=id).first()
         #Check if user exists
         if user:
-            if len(list(user.store) ) == 0:
-                dump_store = store_schema.dump(list(user.store))
-                print(dump_store)
-            elif len(list(user.store) ) <= 1:
-                dump_store = store_schema.dump(list(user.store)[0])
-                print(dump_store)
-            elif len(list(user.store) ) > 1:
-                dump_store = stores_schema.dump(list(user.store))
-                print(dump_store)
+            # if len(list(user.store) ) == 0:
+            #     dump_store = store_schema.dump(list(user.store))
+            #     print(dump_store)
+            # elif len(list(user.store) ) <= 1:
+            #     dump_store = store_schema.dump(list(user.store)[0])
+            #     print(dump_store)
+            # elif len(list(user.store) ) > 1:
+            #     dump_store = stores_schema.dump(list(user.store))
+            #     print(dump_store)
             
             # print(user)
             user = user_schema.dump(user)
-            user['store'] = dump_store
+            # user['store'] = dump_store
         
     return jsonify(user)
 
@@ -422,7 +425,6 @@ def getRoles():
             elif len(list(role['user']) ) > 1:
                 role['user'] = roles_schema.dump(role['user'])
         
-        print(result)
         return jsonify(result)
     else:
         return jsonify({
@@ -610,7 +612,14 @@ def store(id):
         store_inst = Store.query.filter_by(id=id).first()
         if store_inst != None:
             store_inst = store_schema.dump(store_inst)
+
+            if len(list(store_inst['users'])) == 1:
+                store_inst['users'] = user_schema.dump(store_inst['users'][0])
+            elif len(list(store_inst['users'])) > 1:
+                store_inst['users'] = users_schema.dump(store_inst['users'])
+
             return jsonify(store_inst)
+
         else:
             return jsonify({
                 'store': None
@@ -641,6 +650,31 @@ def storeManager(id):
             }
         )
 
+#Get Store
+@app.route("/api/getStoreId/<int:id>", methods=['GET', 'POST'])
+def getStoreId(id):
+    if request.method == 'GET':
+        store_inst = Store.query.get(id)
+        if store_inst != None:
+            store_inst = store_schema.dump(store_inst)
+            
+            #check the length of the apppender
+            if len(list(store_inst['users'])) == 1:
+                store_inst['users'] = user_schema.dump(store_inst['users'][0])
+            elif len(list(store_inst['users'])) > 1:
+                store_inst['users'] = users_schema.dump(store_inst['users'])
+            return jsonify(store_inst)
+        else:
+            return jsonify({
+                'store': None
+            })
+    else:
+        return jsonify(
+            {
+            'route': 'get store!'
+            }
+        )
+
 #Get Stores
 @app.route("/api/getStores")
 def getStore():
@@ -648,8 +682,15 @@ def getStore():
         #Get all Stores
         stores = Store.query.all()
         result = stores_schema.dump(stores)
+
+        # serialize the AppenderBaseQueryProperty
+        for store in result:
+            if len(list(store['users']) ) == 1:
+                store['users'] = user_schema.dump(store['users'][0])
+            elif len(list(store['users']) ) > 1:
+                store['users'] = users_schema.dump(store['users'])
         
-        print(result)
+    
         return jsonify(result)
     else:
         return jsonify({
@@ -664,7 +705,13 @@ def getStoresAdmin(id):
         stores = Store.query.filter_by(owner=id)
         result = stores_schema.dump(stores)
         
-        print(result)
+        # serialize the AppenderBaseQueryProperty
+        for store in result:
+            if len(list(store['users']) ) == 1:
+                store['users'] = user_schema.dump(store['users'][0])
+            elif len(list(store['users']) ) > 1:
+                store['users'] = users_schema.dump(store['users'])
+                
         return jsonify(result)
     else:
         return jsonify({
@@ -790,7 +837,7 @@ def updateProduct(id):
             db.session.commit()
 
             return jsonify({
-                "updateProduct": 200
+                "Success": "Product updated."
             })
     return jsonify({
             "route": "updateProduct"
@@ -815,12 +862,12 @@ def updateProductAdmin(id):
                 product.quantity = deficit
 
                 #Store
-                store = Store.query.filter_by(user_id=form_data['manager']).first()
+                # store = Store.query.filter_by(user_id=form_data['manager']).first()
+                store = Store.query.get(form_data['storeId'])
 
                 #Filter product by [productname, store_id]
                 store_product = Product.query.filter_by(productname=product.productname)
                 store_product = store_product.filter_by(store_id=store.id).first()
-            
 
                 if store_product == None:
                     #Create new order and product under the manager
@@ -831,7 +878,8 @@ def updateProductAdmin(id):
                                 description = Product.query.get(form_data['id']).description,
                                 price = Product.query.get(form_data['id']).price,
                                 quantity = int(form_data['quantity']),
-                                location = Store.query.filter_by(user_id=form_data['manager']).first().storename,
+                                # location = Store.query.filter_by(user_id=form_data['manager']).first().storename,
+                                location = store.storename,
                                 owner = int(form_data['owner']),
                                 store_id = store.id,
                                 category_id = Product.query.get(form_data['id']).category_id,
@@ -842,7 +890,8 @@ def updateProductAdmin(id):
                         new_order = Order(
                             quantity = int(form_data['quantity']),
                             owner = int(form_data['owner']),
-                            store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
+                            # store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
+                            store_id = store.id,
                             product_id = new_product.id,
                         )
 
@@ -868,7 +917,8 @@ def updateProductAdmin(id):
                     new_order = Order(
                         quantity = int(form_data['quantity']),
                         owner = int(form_data['owner']),
-                        store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
+                        # store_id = Store.query.filter_by(user_id=form_data['manager']).first().id,
+                        store_id = store.id,
                         product_id = store_product.id,
                     )
                     #Stage the items

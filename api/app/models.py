@@ -28,7 +28,8 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     password_hash = db.Column(db.String(128))
-    store = db.relationship('Store', backref='manager', lazy='dynamic')
+    # store = db.relationship('Store', backref='manager', lazy='dynamic')
+    store_id = db.Column(db.Integer(), db.ForeignKey('store.id'), nullable=True)
 
     role_id = db.Column(db.Integer(), db.ForeignKey('role.id'), nullable=True)
 
@@ -72,7 +73,9 @@ class Store(db.Model):
     owner = db.Column(db.Integer(), index=True, nullable=True)
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
+    # user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
+    users = db.relationship('User', backref='managers', lazy='dynamic')
+
     orders = db.relationship('Order', backref='storeorders', lazy='dynamic')
     products = db.relationship('Product', backref='storeproducts', lazy='dynamic')
 

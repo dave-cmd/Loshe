@@ -12,7 +12,8 @@ const DashboardManager = () => {
     //Get id from session storage
     const object  = JSON.parse(sessionStorage.getItem("token"))
     
-    const{data, error, isFetching} = useFetch('/api/storeByManager/' + object.id)
+    // const{data, error, isFetching} = useFetch('/api/storeByManager/' + object.id)
+    const{data, error, isFetching} = useFetch('/api/getStoreId/' + object.store)
 
     //Delete error
     const[deleteError, setDeleteError] = useState(false)
@@ -24,7 +25,8 @@ const DashboardManager = () => {
     const [displayDeleteOverlay, setDisplayDeleteOverlay] = useState(false)
 
      //Fetch product count
-     const{data:products, error:errorProductCount} = useFetch("/api/getStoreProducts/" + data.id)
+    //  const{data:products, error:errorProductCount} = useFetch("/api/getStoreProducts/" + data.id)
+    const{data:products, error:errorProductCount} = useFetch("/api/getStoreProducts/" + object.store)
 
      //Implement reduce later TODO
      let productCount = 0
@@ -136,7 +138,8 @@ const DashboardManager = () => {
                             {phoneIcon}
                             <div className="phone-subsection">
                                 <div className="font bold">PHONE</div>
-                                <div className="font">{manager.phone}</div>
+                                <a href={`tel://${manager.phone}`}>{manager.phone}</a>
+                                {/* <div className="font">{manager.phone}</div> */}
                             </div>
                         </div>
                         <div className="email-details">
@@ -154,7 +157,7 @@ const DashboardManager = () => {
                     <div className="action-section">
                         {/* <div className="action update" onClick={redirectToUpdate}>Update</div>
                         <div className="action delete" onClick={()=>{activateDeleteOverlay();}}>Delete</div> */}
-                        <div className="action delete" onClick={()=>{redirectToRequest()}}>Request</div>
+                        <div className="action update" onClick={()=>{redirectToRequest()}}>Request</div>
                     </div>
                 </>)
             }

@@ -33,7 +33,7 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
         })
         .then(res=>{
             if(!res.ok){
-                throw Error("An error occured in updating the product...")
+                throw Error("An error occured in updating the order...")
             }
             return res.json()
         })
@@ -48,6 +48,8 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
         })
     }
 
+    console.log(object.role)
+    console.log(store)
     if (!open) return null
 
     else {
@@ -79,12 +81,15 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
                     </div>
                     <div className="modal-buttons-section">
                         {object.id === owner && status === "Pending" && <button className="modal-buttons" onClick={updateOrder}>Approve</button>}
-                        {object.id === store.user_id && status === "Pending" && <button disabled className="modal-buttons">Awaiting approval..</button>}
+                        {object.role === "Manager" && status === "Pending" && <button disabled className="modal-buttons">Awaiting approval..</button>}
+                        {/* {object.id === store.user_id && status === "Pending" && <button disabled className="modal-buttons">Awaiting approval..</button>} */}
 
-                        {object.id === store.user_id && status === "Approved" && <button className="modal-buttons" onClick={updateOrder}>Confirm Delivery</button>}
+                        {/* {object.id === store.user_id && status === "Approved" && <button className="modal-buttons" onClick={updateOrder}>Confirm Delivery</button>} */}
                         {object.id === store.owner && status === "Approved" && <button className="modal-buttons">Awaiting delivery...</button>}
+                        {object.role === "Manager" && status === "Approved" && <button className="modal-buttons" onClick={updateOrder}>Confirm Delivery</button>}
 
-                        {object.id === store.user_id && status === "Delivered" && <button disabled className="modal-buttons">Delivered</button>}
+                        {/* {object.id === store.user_id && status === "Delivered" && <button disabled className="modal-buttons">Delivered</button>} */}
+                        {object.role === "Manager" && status === "Delivered" && <button disabled className="modal-buttons">Delivered</button>}
                         {object.id === store.owner && status === "Delivered" && <button disabled className="modal-buttons">Delivered</button>}
                         
                     </div>
