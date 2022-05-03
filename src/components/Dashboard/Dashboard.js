@@ -69,7 +69,6 @@ const Dashboard = ({isAuthorized, userID})=>{
     }
 
 
-
     return ( 
         <>
         {object.role !== "Admin" && <DashboardManager userID={userID} />}
@@ -86,7 +85,7 @@ const Dashboard = ({isAuthorized, userID})=>{
 
             <div className="action-section">Recent Activity</div>
 
-            <div className="feed-section">
+            <div className="feed-section height">
                 {orders.length === 0 && <div className="orders-font">Orders currently unavailable.</div>}
                 {feedItems}
             </div>

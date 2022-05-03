@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faPhone, faAt, faStore, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import FeedItem from "../sub-components/FeedItem/FeedItem";
 import useFetch from "../hooks/useFetch";
@@ -15,9 +15,6 @@ const StoreDetails = () => {
 
     // const{data, error, isFetching} = useFetch('/api/store/' + id)
     const{data, error, isFetching} = useFetch('/api/getStoreId/' + id)
-
-
-    console.log(data)
 
     //Delete error
     const[deleteError, setDeleteError] = useState(false)
@@ -44,10 +41,11 @@ const StoreDetails = () => {
 
 
     //Icons
-    const storeIcon = <FontAwesomeIcon className="profileIcon" icon={faStore} />
-    const emailIcon = <FontAwesomeIcon className="emailIcon" icon={faAt} />
-    const phoneIcon = <FontAwesomeIcon className="phoneIcon" icon={faPhone} />
-    const requestIcon = <FontAwesomeIcon className="requestIcon" icon={faPlusCircle} />
+    const storeIcon = <FontAwesomeIcon className="profileIcon color" icon={faStore} />
+    const emailIcon = <FontAwesomeIcon className="phoneIcon color" icon={faAt} />
+    const phoneIcon = <FontAwesomeIcon className="phoneIcon color" icon={faPhone} />
+    const contactIcon = <FontAwesomeIcon className="phoneIcon color" icon={faUser} />
+    const requestIcon = <FontAwesomeIcon className="requestIcon color" icon={faPlusCircle} />
 
     //Fetch manager role
     // const {data:manager, error: errorRole} = useFetch('/api/staff/' + data.user_id)
@@ -84,7 +82,6 @@ const StoreDetails = () => {
             return res.json()
         })
         .then(data=>{
-            console.log(data);
             setDisplayDeleteOverlay(false);
             history.push("/getStores")
         })
@@ -103,6 +100,7 @@ const StoreDetails = () => {
     const redirectToRequest = ()=>{
         history.push("/request/");
     }
+
     return ( 
         
         <div className="wrapper-staff-details">
@@ -140,25 +138,57 @@ const StoreDetails = () => {
                         {orders.length === 0 && <div className="orders-font">Orders currently unavailable.</div>}
                         {feedItems}
                     </div>
-                    <div className="contact-section">
-                        <div className="phone-details">
-                            {phoneIcon}
-                            <div className="phone-subsection">
-                                <div className="font bold">PHONE</div>
-                                <div className="font">{data.users.phone}</div>
-                            </div>
-                        </div>
-                        <div className="email-details">
-                            {emailIcon}
-                            <div className="email-subsection">
-                                <div className="font bold">EMAIL</div>
-                                <div className="font">{data.users.email}</div>
-                            </div>
-                        </div>
+                    <div className="contact-section-rl">
+                        {Array.isArray(data.users) && data.users.map(elem=>{
+                           return <div className="contact-entity">
+                                    <div className="phone-details">
+                                        {contactIcon}
+                                        <div className="phone-subsection">
+                                            <div className="font bold color">MANAGER</div>
+                                            <div className="font">{elem.lastname}</div>
+                                        </div>
+                                    </div>
+                                    <div className="phone-details">
+                                        {phoneIcon}
+                                        <div className="phone-subsection">
+                                            <div className="font bold color">PHONE</div>
+                                            <div className="font color"><a href={`tel://${elem.phone}`}>{elem.phone}</a></div>
+                                        </div>
+                                    </div>
+                                    <div className="phone-details">
+                                        {phoneIcon}
+                                        <div className="phone-subsection">
+                                            <div className="font bold color">EMAIL</div>
+                                            <div className="font color">{elem.email}</div>
+                                        </div>
+                                    </div>
+                                  </div>
+                
+                        })}
+                        {!Array.isArray(data.users) &&  <div>
+                                                                <div className="phone-details">
+                                                                    {phoneIcon}
+                                                                    <div className="phone-subsection">
+                                                                        <div className="font bold color">PHONE</div>
+                                                                        <div className="font color">{data.users.phone}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="email-details">
+                                                                    {emailIcon}
+                                                                    <div className="email-subsection">
+                                                                        <div className="font bold color">EMAIL</div>
+                                                                        <div className="font color">{data.users.email}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>}
+
                     </div>
                     <div className="store-section">
-                        <div className="font bold">Manager:</div>
-                        <div className="font">{data.users.firstname} {data.users.lastname}</div>
+                        <div className="font bold color">Manager(s):</div>
+                        {Array.isArray(data.users) && data.users.map(elem=>{
+                            return <div className="font">{elem.firstname} {elem.lastname}</div>
+                        })}
+                        {!Array.isArray(data.users) && <div className="font">{data.users.firstname} {data.users.lastname}</div>}
                     </div>
                     <div className="action-section">
                         <div className="action update" onClick={redirectToUpdate}>Update</div>

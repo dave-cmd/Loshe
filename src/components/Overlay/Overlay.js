@@ -25,7 +25,7 @@ const Overlay = ({visible, toggleHamburger, logout})=>{
             style={visible? {display: "block"}: {display: "none"}}>
                 <div className="text">
                     <Link to="/">{homeIcon}  Home</Link>
-                    {object.role === "Manager" && <Link to="/getStaff">{requestIcon}  Request</Link>}
+                    {object.role === "Manager" && <Link to="/request">{requestIcon}  Request</Link>}
                     {object.role === "Admin" && <Link to="/getStaff">{staff}  Staff</Link>}
                     {object.role === "Admin" && <Link to="/getInventory">{inventory} Inventory</Link>}
                     {object.role === "Admin" && <Link to="/getStores">{stores} Stores</Link>}

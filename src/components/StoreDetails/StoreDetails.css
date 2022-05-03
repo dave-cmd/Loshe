@@ -32,6 +32,19 @@
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
 }
 
+.contact-section-rl {
+    display: flex;
+    gap: 20px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: white;
+    height: 150px;
+    /* margin-left: 30px;
+    margin-right: 30px; */
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+}
+
 /* TODO */
 .hero-section {
     display: flex;
@@ -65,7 +78,6 @@
 
 
 }
-
 
 .store-section {
     display: flex;
@@ -164,7 +176,6 @@
     /* align-items: center;
     justify-content: center; */
     width: 30%;
-
 }
 
 .email-details {
@@ -186,6 +197,18 @@
     background-color: rgba(0,0,0,0.75);
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     border-radius: 10px;
+}
+
+.contact-entity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.color {
+    color: rgba(0,0,0, 0.6);
 }
 
 
@@ -220,6 +243,11 @@
 
     .contact-section{
         flex-direction: column;
+        margin: 10px;
+    }
+
+    .contact-section-rl{
+        flex-direction: row;
         margin: 10px;
     }
 
