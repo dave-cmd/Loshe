@@ -45,7 +45,6 @@ const Login = ({setToken, setIsAuthorized, setUserID}) => {
                 email:"",
                 password:""
             })
-            console.log(data);
         })
         .catch(err=>{
             console.log(err.message)

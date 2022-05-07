@@ -82,7 +82,7 @@ const DashboardManager = () => {
             return res.json()
         })
         .then(data=>{
-            console.log(data);
+            // console.log(data);
             setDisplayDeleteOverlay(false);
             history.push("/getStores")
         })

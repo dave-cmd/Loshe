@@ -1,5 +1,6 @@
 
 from crypt import methods
+import email
 import json
 from urllib import response
 from app import app, db
@@ -75,8 +76,8 @@ def signup():
     if request.method == 'POST':
         json_data = request.get_json()
         # print(json_data["email"])
-        user_email = User.query.filter_by(email=json_data["email"]).first()
-        user_phone = User.query.filter_by(phone=json_data["phone"]).first()
+        user_email = User.query.filter_by(email=json_data["email"].strip()).first()
+        user_phone = User.query.filter_by(phone=json_data["phone"].strip()).first()
         # print(user)
 
         if user_phone != None or user_email != None:
@@ -87,14 +88,14 @@ def signup():
 
         else:
             post_user = User(
-                    firstname = json_data["firstname"],
-                    lastname = json_data["lastname"],
-                    email =  json_data["email"],
-                    phone =  json_data["phone"],
+                    firstname = json_data["firstname"].strip(),
+                    lastname = json_data["lastname"].strip(),
+                    email =  json_data["email"].strip(),
+                    phone =  json_data["phone"].strip(),
             )
             #Set the owner of admin user to 1000
             post_user.owner = 1000
-            post_user.set_password(json_data["password"])
+            post_user.set_password(json_data["password"].strip())
 
             #Set Super/Admin
             if json_data['email'] in app.config['ADMIN_EMAILS']:
@@ -206,10 +207,25 @@ def createStore():
         #Form json data
         json_data = request.get_json()
 
+        print(json_data)
+
         #Product and Category instances
         store = Store.query.filter_by(storename=json_data["storename"].strip()).first()
         store_manager = User.query.filter_by(email=json_data["email"].strip()).first()
         store_manager_phone = User.query.filter_by(phone=json_data["phone"]).first()
+
+        #Manager 2
+        set_manager_2 = False
+
+        #Check if manager2 form details are empty
+        if json_data["firstname2"] != '' and json_data["lastname2"] != '' and json_data["phone2"] != '' and json_data["email2"] != ''  and json_data["password2"] != '' and json_data["permission2"] != '':
+            set_manager_2 = True
+            store_manager2 = User.query.filter_by(email=json_data["email"].strip()).first()
+            store_manager_phone2 = User.query.filter_by(phone=json_data["phone"]).first()
+            user_role2 = Role.query.filter_by(role=json_data['permission'].strip()).first()
+            print("------------Manager 2 engaged-------------")
+
+              
 
         #roles
         user_role = Role.query.filter_by(role=json_data['permission'].strip()).first()
@@ -245,10 +261,26 @@ def createStore():
             # manager.store.append(post_store)
             post_store.users.append(manager)
 
+            #Manager 2 logic
+            if set_manager_2 and store_manager2 == None and store_manager_phone2 == None:
+                #Store manager 2 instance
+                manager2 = User(
+                    firstname = json_data['firstname2'].strip(),
+                    lastname = json_data['lastname2'].strip(),
+                    email = json_data['email2'].strip(),
+                    phone = json_data['phone2'],
+                    owner = json_data['owner']
+                )
+                manager.set_password(json_data['password2'].strip())
+
+                #Append manager2 to store and role
+                post_store.users.append(manager2)
+                user_role2.user.append(manager2)
+
             db.session.add(manager)
             db.session.add(post_store)
             db.session.commit()
-            print("Successfully added store & manager----------------")
+            print("Successfully created new store and manager(s)----------------")
             print(user_role.role)
 
             return jsonify({
@@ -952,8 +984,17 @@ def updateStore(id):
         #Get form data
         form_data = request.get_json()
 
-        #Create a store instance
+        #Get store instance
         store = Store.query.get(id)
+
+        #Add mamager flag & get second manager details
+        addSecondManager = False
+        if form_data['firstname'] != "" and form_data['lastname']!= "" and form_data['phone'] != "" and form_data['email'] != "" and form_data['password'] != "" and form_data['permission'] != "":
+            addSecondManager = True
+            manager_email = User.query.filter_by(email=form_data['email'].strip()).first()
+            manager_phone = User.query.filter_by(phone=form_data['email'].strip()).first()
+            role = Role.query.filter_by(role=form_data['permission'].strip()).first()
+
 
         #Update store instance with form data
         if store!= None:
@@ -961,7 +1002,22 @@ def updateStore(id):
             store.region = form_data['region'].strip()
             store.update_at = datetime.utcnow()
 
-        #TODO: Update manager
+            #TODO: Update manager
+            if addSecondManager and manager_email == None and manager_phone == None:
+                manager = User(
+                    firstname = form_data['firstname'].strip(),
+                    lastname = form_data['lastname'].strip(),
+                    phone = form_data['phone'].strip(),
+                    email = form_data['email'].strip(),
+                )
+
+                #set and hash manager's password
+                manager.set_password(form_data['password'].strip())
+
+                #Add Role and Store relationships
+                role.user.append(manager)
+                store.users.append(manager)
+                db.session.add(manager)
 
         #Commit changes to database
         db.session.commit()

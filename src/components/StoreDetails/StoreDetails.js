@@ -156,7 +156,7 @@ const StoreDetails = () => {
                                         </div>
                                     </div>
                                     <div className="phone-details">
-                                        {phoneIcon}
+                                        {emailIcon}
                                         <div className="phone-subsection">
                                             <div className="font bold color">EMAIL</div>
                                             <div className="font color">{elem.email}</div>
@@ -170,7 +170,7 @@ const StoreDetails = () => {
                                                                     {phoneIcon}
                                                                     <div className="phone-subsection">
                                                                         <div className="font bold color">PHONE</div>
-                                                                        <div className="font color">{data.users.phone}</div>
+                                                                        <div className="font color"><a href={`tel://${data.users.phone}`}>{data.users.phone}</a></div>
                                                                     </div>
                                                                 </div>
                                                                 <div className="email-details">

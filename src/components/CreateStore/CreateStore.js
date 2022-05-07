@@ -10,21 +10,28 @@ const CreateStore = ({ isAuthorized, userID }) => {
 
     //Initialize use history
     const history = useHistory();
-
+    const[page, setPage] = useState(2)
+    const[addManager, setAddManager] = useState(false)
     const[count, setCount] = useState(1);
     const[form, setForm] = useState({
         storename: "",
         region: "",
         firstname: "",
+        firstname2: "",
         lastname: "",
-        phone: "",              
+        lastname2: "",
+        phone: "",
+        phone2: "",              
         email: "",
+        email2: "",
         password: "",
+        password2: "",
         permission: "",
+        permission2: "",
         owner: object.id
     });
 
-    //progressive form handler
+    //Progressive form handler
     const progressiveHandler = ()=>{
         if(count < 2){
             setCount(count + 1);
@@ -36,6 +43,13 @@ const CreateStore = ({ isAuthorized, userID }) => {
         const name = event.target.name;
         const value = event.target.value;
         setForm({...form,[name]:value});
+    }
+
+    //Add second manager
+    const addSecondManager = ()=>{
+        setAddManager(prevState=>{
+            return !prevState
+        })
     }
 
     //Submit form data
@@ -60,11 +74,17 @@ const CreateStore = ({ isAuthorized, userID }) => {
                 storename: "",
                 region: "",
                 firstname: "",
+                firstname2: "",
                 lastname: "",
-                phone: "",              
+                lastname2: "",
+                phone: "",
+                phone2: "",              
                 email: "",
+                email2: "",
                 password: "",
-                permission: ""
+                password2: "",
+                permission: "",
+                permission2: ""
             });
             
             //Redirect
@@ -76,6 +96,67 @@ const CreateStore = ({ isAuthorized, userID }) => {
         })
     }
 
+
+    const managerForm = 
+                    <div className="form1">
+                        <div className="inp">
+                            <input 
+                                type="text" 
+                                name="firstname2"
+                                placeholder="Second manager's firstname..." 
+                                required
+                                value={form.firstname2}
+                                onChange={changeHandler} />
+                        </div>
+                        <div className="inp">
+                            <input 
+                                type="text" 
+                                name="lastname2"
+                                placeholder="Second manager's lastname..." 
+                                required
+                                value={form.lastname2}
+                                onChange={changeHandler} />
+                        </div> 
+                        <div className="inp">
+                            <input 
+                                type="tel" 
+                                name="phone2"
+                                placeholder="254711222333" 
+                                required
+                                value={form.phone2}
+                                onChange={changeHandler} />
+                        </div> 
+                        <div className="inp">
+                            <input 
+                                type="email" 
+                                name="email2"
+                                placeholder="Second manager's email" 
+                                required
+                                value={form.email2}
+                                onChange={changeHandler} />
+                        </div>
+                        <div className="inp">
+                            <input 
+                                type="password" 
+                                name="password2"
+                                placeholder="Second manager's password" 
+                                required
+                                value={form.password2}
+                                onChange={changeHandler} />
+                        </div> 
+                        <div className="inp">
+                                <select
+                                    name="permission2"
+                                    required
+                                    value={form.permission2}
+                                    onChange={changeHandler}>
+                                    <option value="">Select second manager's permissions ...</option>
+                                    <option value="Manager">Manager</option>
+                                </select>
+                        </div>  
+
+                    </div>
+
     return ( <>
                 {object.role !== "Admin" && <div>Unauthorized user</div>}
                 { object.role === "Admin" && <div className="wrapper-create-store">
@@ -83,7 +164,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                 <form onSubmit={submitHandler}> 
                     {count === 1 &&
                     (<div className="form1">
-                            <img className="image" src={Create}/>
+                            <img className="image" alt="form-deco" src={Create}/>
                             <div className="inp">
                                 <input 
                                     type="text" 
@@ -122,6 +203,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                             </div> 
 
                     </div>) }
+
 
                     {count === 2 &&
                     (<div className="form1">
@@ -162,15 +244,20 @@ const CreateStore = ({ isAuthorized, userID }) => {
                                     onChange={changeHandler}>
                                     <option value="">Select manager permissions ...</option>
                                     <option value="Manager">Manager</option>
-                                    <option value="Admin">Admin</option>
                                 </select>
                             </div> 
+                            <div className="addManager">
+                                <div className="child" onClick={addSecondManager}>Add second manager (Optional)</div>
+                            </div>
+
+                            {addManager && managerForm}
+
 
                     </div>) }
+                    
 
-
-                    {count === 1 && <button className="btn next" onClick={progressiveHandler}>Next</button>}
-                    {count === 2 && <button className="btn submit" >Submit</button>}
+                    {count !== page && <button className="btn next" onClick={progressiveHandler}>Next</button>}
+                    {count === page && <button className="btn submit" >Submit</button>}
                 </form>
             </div>}
             </>

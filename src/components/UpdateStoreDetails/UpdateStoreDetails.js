@@ -13,14 +13,25 @@ const UpdateStoreDetails = () => {
     //use paramas
     const {id} = useParams()
 
+
+    const[addManager, setAddManager]  = useState(false)
+    // const [showAddManager, setShowAddManager] = useState(false)
+
     //Fetch store data
     const {data, setError} = useFetch("/api/store/" + id);
-    console.log(Array.isArray(data))
+
+    // console.log(Array.isArray(data))
 
     //Form state
     const[form, setForm] = useState({
         storename: "",
-        region: ""
+        region: "",
+        firstname: "",
+        lastname: "",
+        phone: "",
+        email: "",
+        password: "",
+        permission: ""
     });
 
     //setFormData
@@ -31,6 +42,7 @@ const UpdateStoreDetails = () => {
                 region: data.region,
             })
         }
+        console.log(data.users)
     }
     ,[data])
 
@@ -57,13 +69,81 @@ const UpdateStoreDetails = () => {
             return res.json();
         })
         .then(data=>{
-            // console.log(data);
+            console.log(data);
             history.push("/store/"+ id)
         })
         .catch(e=>{
             console.warn(e.message);
         })
     }
+
+    //Add second manager
+    const addSecondManager = ()=>{
+        setAddManager(prevState=>{
+            return !prevState
+        })
+    }
+
+    //Add manager form
+    const managerForm = 
+                        <div className="form1">
+                            <div className="inp">
+                                <input 
+                                    type="text" 
+                                    name="firstname"
+                                    placeholder="Second manager's firstname..." 
+                                    required
+                                    value={form.firstname}
+                                    onChange={changeHandler} />
+                            </div>
+                            <div className="inp">
+                                <input 
+                                    type="text" 
+                                    name="lastname"
+                                    placeholder="Second manager's lastname..." 
+                                    required
+                                    value={form.lastname}
+                                    onChange={changeHandler} />
+                            </div> 
+                            <div className="inp">
+                                <input 
+                                    type="tel" 
+                                    name="phone"
+                                    placeholder="254711222333" 
+                                    required
+                                    value={form.phone}
+                                    onChange={changeHandler} />
+                            </div> 
+                            <div className="inp">
+                                <input 
+                                    type="email" 
+                                    name="email"
+                                    placeholder="Second manager's email" 
+                                    required
+                                    value={form.email}
+                                    onChange={changeHandler} />
+                            </div>
+                            <div className="inp">
+                                <input 
+                                    type="password" 
+                                    name="password"
+                                    placeholder="Second manager's password" 
+                                    required
+                                    value={form.password}
+                                    onChange={changeHandler} />
+                            </div> 
+                            <div className="inp">
+                                    <select
+                                        name="permission"
+                                        required
+                                        value={form.permission}
+                                        onChange={changeHandler}>
+                                        <option value="">Select second manager's permissions ...</option>
+                                        <option value="Manager">Manager</option>
+                                    </select>
+                            </div>  
+                        </div>
+
 
     return ( 
             <div className="wrapper-create-store">
@@ -89,6 +169,11 @@ const UpdateStoreDetails = () => {
                                     value={form.region}
                                     onChange={changeHandler} />
                             </div>
+                            { Array.isArray(data.users) === false && <div className="addManager">
+                                <div className="child" onClick={addSecondManager}>Add second manager (Optional)</div>
+                            </div>}
+
+                            { addManager && managerForm}
                     </div>
                     <button className="btn submit" >Update</button>
                 </form>

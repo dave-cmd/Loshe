@@ -78,6 +78,19 @@ form{
     color: rgba(0, 0, 0, 0.7);
 }
 
+.addManager {
+    width: 400px;
+    color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    
+}
+
+.child {
+    font-size: medium;
+    font-weight: 700;
+    
+}
+
 
 
 @media screen and (max-width: 500px) {
@@ -100,6 +113,16 @@ form{
     
     .inp > textarea {
         width: 350px;
+    }
+
+    .addManager {
+        width: 350px;
+    }
+
+    .child {
+        font-size: small;
+        font-weight: 600;
+        
     }
 }
 
@@ -140,5 +163,15 @@ form{
         font-size: 14px;
         text-indent: 10px;
         color: rgba(0, 0, 0, 0.7);
+    }
+
+    .addManager {
+        width: 300px;
+    }
+
+    .child {
+        font-size: small;
+        font-weight: 600;
+        
     }
 }

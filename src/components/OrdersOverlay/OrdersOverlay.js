@@ -38,7 +38,6 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
             return res.json()
         })
         .then(data=>{
-            console.log(data)
             onClose()
             setPosting(false)
         })
@@ -48,8 +47,7 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
         })
     }
 
-    console.log(object.role)
-    console.log(store)
+   
     if (!open) return null
 
     else {
