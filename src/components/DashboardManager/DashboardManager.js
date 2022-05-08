@@ -96,6 +96,11 @@ const DashboardManager = () => {
     const redirectToRequest = ()=>{
         history.push("/request/");
     }
+
+    //Redirect to Store products
+    const redirectToProducts = ()=>{
+        history.push("/getStoreInventory/" + object.store)
+    }
     return ( 
         
         <div className="wrapper-staff-details">
@@ -115,7 +120,7 @@ const DashboardManager = () => {
                     </div>
 
                     <div className="hero-section">
-                        <div className="store-dashItem">
+                        <div className="store-dashItem" onClick={redirectToProducts}>
                             <div className="font bold">Products</div>
                             <div className="font">{productCount}</div>
                         </div>

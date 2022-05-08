@@ -12,6 +12,9 @@ const InventoryDetails = () => {
     const {id} = useParams();
     const{data, error, isFetching} = useFetch('/api/product/' + id)
 
+    //Logged in user object
+    const object = JSON.parse(sessionStorage.getItem("token"))
+
     //Delete error
     const[deleteError, setDeleteError] = useState(false)
 
@@ -109,10 +112,10 @@ const InventoryDetails = () => {
                                     </div>
                         })): typeof data.store === 'object'? (<div>{data.store.storename}</div>): <div>No store available</div>} */}
                     </div>
-                    <div className="action-section">
+                    {object.role === "Admin" && object.id === data.owner && <div className="action-section">
                         <div className="action update" onClick={redirectToUpdate}>Update</div>
                         <div className="action delete" onClick={()=>{activateDeleteOverlay();}}>Delete</div>
-                    </div>
+                    </div>}
                 </>)
             }
             { error !== null && <div className="status error">{error}</div>}

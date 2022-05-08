@@ -20,6 +20,7 @@ import StoreDetails from "../StoreDetails/StoreDetails";
 import UpdateStoreDetails from "../UpdateStoreDetails/UpdateStoreDetails"
 import Request from "../Request/Request";
 import InventoryAlmostOut from "../InventoryAlmostOut/InventoryAlmostOut";
+import InventoryStore from "../InventoryStore/InventoryStore"
 
 function App() {
   const {token, setToken} = useToken()
@@ -87,6 +88,9 @@ function App() {
             </Route>
             <Route path="/getInventory">
               <Inventory isAuthorized={isAuthorized} />
+            </Route>
+            <Route path="/getStoreInventory/:id">
+              <InventoryStore isAuthorized={isAuthorized} />
             </Route>
             <Route path="/getStaff">
               <Staff isAuthorized={isAuthorized}
