@@ -1,0 +1,24 @@
+
+.search {
+    padding: 15px;
+    font-size: 17px;
+    border: none;
+    width: 40%;
+}
+
+.height {
+    height: 300px;
+}
+
+
+@media screen and (max-width: 500px) {
+    .search{
+        width: 80%;
+        font-size: 13px;
+        border-radius: 5px;
+    }
+
+    .height {
+        height: 500px;
+    }
+}

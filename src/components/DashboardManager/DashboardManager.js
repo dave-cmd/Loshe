@@ -30,15 +30,20 @@ const DashboardManager = () => {
 
      //Implement reduce later TODO
      let productCount = 0
-
      products.forEach(item=>productCount += item.quantity)
 
     //Fetch store products almost out
     const {data:storeProductsAlmostOut, error: errorStoreProductsAmostOut} = useFetch('/api/getStoreProductsAlmostOut/' + data.id)
 
     let storeProductsAlmostOutCount = 0
-
     storeProductsAlmostOut.forEach(item=>{ return storeProductsAlmostOutCount += 1})
+
+
+     //Fetch store sales
+     const{data:sales, error:errorSales} = useFetch("/api/getStoreSales/" +  data.id)
+
+     let storeSalesCount = 0
+     sales.forEach(item=> { return storeSalesCount += 1})
 
      //Fetch store orders
      const{data:orders, error:errorOrders} = useFetch("/api/getStoreOrders/" +  data.id)
@@ -77,7 +82,7 @@ const DashboardManager = () => {
         })
         .then(res=>{
             if(!res.ok){
-                throw Error("Error deleting store memeber.");
+                throw Error("Error deleting store member.");
             }
             return res.json()
         })
@@ -95,6 +100,11 @@ const DashboardManager = () => {
     //Redirect to request
     const redirectToRequest = ()=>{
         history.push("/request/");
+    }
+
+    //Redirect to sales
+    const redirectToSale = ()=>{
+        history.push("/sale/");
     }
 
     //Redirect to Store products
@@ -130,7 +140,7 @@ const DashboardManager = () => {
                         </div>
                         <div className="store-dashItem">
                             <div className=" font bold">Sold</div>
-                            <div className="font">--</div>
+                            <div className="font">{storeSalesCount}</div>
                         </div>
                     </div>
 
@@ -163,6 +173,7 @@ const DashboardManager = () => {
                         {/* <div className="action update" onClick={redirectToUpdate}>Update</div>
                         <div className="action delete" onClick={()=>{activateDeleteOverlay();}}>Delete</div> */}
                         <div className="action update" onClick={()=>{redirectToRequest()}}>Request</div>
+                        <div className="action update" onClick={()=>{redirectToSale()}}>Sell</div>
                     </div>
                 </>)
             }

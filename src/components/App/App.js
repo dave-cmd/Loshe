@@ -21,6 +21,7 @@ import UpdateStoreDetails from "../UpdateStoreDetails/UpdateStoreDetails"
 import Request from "../Request/Request";
 import InventoryAlmostOut from "../InventoryAlmostOut/InventoryAlmostOut";
 import InventoryStore from "../InventoryStore/InventoryStore"
+import Sale from "../Sale/Sale";
 
 function App() {
   const {token, setToken} = useToken()
@@ -120,6 +121,9 @@ function App() {
             </Route>
             <Route path="/request">
               <Request />
+            </Route>
+            <Route path="/sale">
+              <Sale />
             </Route>
             <Route path="/inventoryAlmostOut">
               <InventoryAlmostOut />
