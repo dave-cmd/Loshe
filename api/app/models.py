@@ -47,6 +47,7 @@ class Category(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     category = db.Column(db.String(64), index=True)
     product = db.relationship('Product', backref='class', lazy='dynamic')
+    sales = db.relationship('Sale', backref='salescategories', lazy='dynamic')
     owner = db.Column(db.Integer(), index=True, nullable=True)
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -78,6 +79,7 @@ class Store(db.Model):
 
     orders = db.relationship('Order', backref='storeorders', lazy='dynamic')
     products = db.relationship('Product', backref='storeproducts', lazy='dynamic')
+    sales = db.relationship('Sale', backref='storesales', lazy='dynamic')
 
 
 
@@ -90,5 +92,20 @@ class Order(db.Model):
     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+
+
+class Sale(db.Model):
+     id = db.Column(db.Integer(), primary_key=True)
+     productname = db.Column(db.String(12), index=True)
+     description = db.Column(db.String(256), index=True)
+     price = db.Column(db.Integer(), index=True)
+     quantity = db.Column(db.Integer(), index=True)
+     location = db.Column(db.String(128), index=True)
+     owner = db.Column(db.Integer(), index=True, nullable=True)
+     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+     category_id = db.Column(db.Integer(), db.ForeignKey('category.id'), nullable=True)
+     store_id = db.Column(db.Integer(), db.ForeignKey('store.id'), nullable=True)
+    #  orders = db.relationship('Order', backref='productorders', lazy='dynamic')
 
 

@@ -28,3 +28,8 @@ class StoreSchema(ma.Schema):
 class OrderSchema(ma.Schema):
     class Meta:
         fields = ('id', 'quantity', 'timestamp', 'status','created_at', 'updated_at', 'owner', 'product_id', 'store_id')
+
+
+class SaleSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'productname', 'description', 'price', 'quantity', 'location', 'created_at', 'updated_at', 'owner', 'category_id', 'store_id')

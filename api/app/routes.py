@@ -2,14 +2,15 @@
 from crypt import methods
 import email
 import json
+import re
 from urllib import response
 from app import app, db
 from flask import jsonify, request
 import time
 import secrets
 from datetime import datetime
-from app.models import User, Role, Category, Product, Store, Order
-from app.schema import UserSchema, RoleSchema, CategorySchema, ProductSchema, StoreSchema, OrderSchema 
+from app.models import User, Role, Category, Product, Store, Order, Sale
+from app.schema import UserSchema, RoleSchema, CategorySchema, ProductSchema, StoreSchema, OrderSchema, SaleSchema
 
 #Init Schema
 
@@ -36,6 +37,10 @@ stores_schema = StoreSchema(many=True)
 #Order
 order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
+
+#Sale
+sale_schema = SaleSchema()
+sales_schema = SaleSchema(many=True)
 
 @app.route('/api/time')
 def get_current_time():
@@ -750,6 +755,27 @@ def getStoresAdmin(id):
         "route": "getStoresAdmin"
         })
 
+#Get Store sales
+@app.route("/api/getStoreSales/<int:id>")
+def getStoreSales(id):
+    if request.method == 'GET':
+        #Get all Stores by admin
+        sales = Sale.query.filter_by(owner=id)
+        result = sales_schema.dump(sales)
+        
+        # serialize the AppenderBaseQueryProperty
+        # for store in result:
+        #     if len(list(store['users']) ) == 1:
+        #         store['users'] = user_schema.dump(store['users'][0])
+        #     elif len(list(store['users']) ) > 1:
+        #         store['users'] = users_schema.dump(store['users'])
+                
+        return jsonify(result)
+    else:
+        return jsonify({
+        "route": f"Sales recorded in store {id}"
+        })
+
 #Delete Staff
 @app.route("/api/deleteStaff/<int:id>", methods=['DELETE', 'GET'])
 def deleteStaff(id):
@@ -976,6 +1002,56 @@ def updateProductAdmin(id):
     return jsonify({
             "route": "updateProductAdmin"
     })
+
+
+#Update ProductStore
+@app.route("/api/updateProductStore/<int:id>", methods=['PATCH', 'GET'])
+def updateProductStore(id):
+    
+    if request.method == 'PATCH':
+
+        form_data = request.get_json()
+        product = Product.query.get(id)
+
+        if product:
+            #Get the deficit
+            deficit  = product.quantity - int(form_data['quantity'])
+
+            if deficit < 0:
+                return jsonify({
+                    "Error": "Sale quantity exceeded."
+                })
+            #Create new sales record
+            sale = Sale(
+                    productname = product.productname,
+                    description = product.description,
+                    price = product.price,
+                    quantity = int(form_data["quantity"]),
+                    location = product.location,
+                    owner = product.owner,
+                    created_at = datetime.utcnow(),
+                    updated_at = datetime.utcnow(),
+                    category_id = product.category_id,
+                    store_id = int(form_data['storeId'])
+
+            )
+
+
+            #Update existing store product
+            product.quantity = deficit
+            product.updated_at = datetime.utcnow()
+
+
+            #Persist the data
+            db.session.add(sale)
+            db.session.commit()
+
+            return jsonify({
+                "sales": "sale successful."
+            })
+
+    return jsonify("storeProducts")
+        
 
 #Update Store
 @app.route("/api/updateStore/<int:id>", methods=['PATCH', 'GET'])
