@@ -12,22 +12,22 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    role = db.Column(db.String(64), index=True, unique=True)
-    description = db.Column(db.String(200))
+    role = db.Column(db.String(640), index=True, unique=True)
+    description = db.Column(db.String(2000))
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user = db.relationship('User', backref='access', lazy='dynamic')
 
 class User(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    firstname = db.Column(db.String(64), index=True)
-    lastname = db.Column(db.String(64), index=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-    phone = db.Column(db.Integer(), index=True, unique=True)
+    firstname = db.Column(db.String(640), index=True)
+    lastname = db.Column(db.String(640), index=True)
+    email = db.Column(db.String(640), index=True, unique=True)
+    phone = db.Column(db.BigInteger(), index=True, unique=True)
     owner = db.Column(db.Integer(), index=True, nullable=True)
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(1200))
     # store = db.relationship('Store', backref='manager', lazy='dynamic')
     store_id = db.Column(db.Integer(), db.ForeignKey('store.id'), nullable=True)
 
@@ -45,7 +45,7 @@ class User(db.Model):
 
 class Category(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    category = db.Column(db.String(64), index=True)
+    category = db.Column(db.String(640), index=True)
     product = db.relationship('Product', backref='class', lazy='dynamic')
     sales = db.relationship('Sale', backref='salescategories', lazy='dynamic')
     owner = db.Column(db.Integer(), index=True, nullable=True)
@@ -54,11 +54,11 @@ class Category(db.Model):
 
 class Product(db.Model):
      id = db.Column(db.Integer(), primary_key=True)
-     productname = db.Column(db.String(12), index=True)
-     description = db.Column(db.String(256), index=True)
-     price = db.Column(db.Integer(), index=True)
-     quantity = db.Column(db.Integer(), index=True)
-     location = db.Column(db.String(128), index=True)
+     productname = db.Column(db.String(1200), index=True)
+     description = db.Column(db.String(2560), index=True)
+     price = db.Column(db.BigInteger(), index=True)
+     quantity = db.Column(db.BigInteger(), index=True)
+     location = db.Column(db.String(1200), index=True)
      owner = db.Column(db.Integer(), index=True, nullable=True)
      created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
      updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -69,8 +69,8 @@ class Product(db.Model):
 
 class Store(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    storename = db.Column(db.String(128), index=True, unique=True)
-    region = db.Column(db.String(128), index=True)
+    storename = db.Column(db.String(1200), index=True, unique=True)
+    region = db.Column(db.String(1200), index=True)
     owner = db.Column(db.Integer(), index=True, nullable=True)
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -85,7 +85,7 @@ class Store(db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    quantity = db.Column(db.Integer(), index=True)
+    quantity = db.Column(db.BigInteger(), index=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     owner = db.Column(db.Integer(), index=True, nullable=True)
     status= db.Column(db.String(128), index=True, nullable=True, default="Pending")
@@ -96,11 +96,11 @@ class Order(db.Model):
 
 class Sale(db.Model):
      id = db.Column(db.Integer(), primary_key=True)
-     productname = db.Column(db.String(12), index=True)
-     description = db.Column(db.String(256), index=True)
-     price = db.Column(db.Integer(), index=True)
-     quantity = db.Column(db.Integer(), index=True)
-     location = db.Column(db.String(128), index=True)
+     productname = db.Column(db.String(1200), index=True)
+     description = db.Column(db.String(2560), index=True)
+     price = db.Column(db.BigInteger(), index=True)
+     quantity = db.Column(db.BigInteger(), index=True)
+     location = db.Column(db.String(1280), index=True)
      owner = db.Column(db.Integer(), index=True, nullable=True)
      created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
      updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
