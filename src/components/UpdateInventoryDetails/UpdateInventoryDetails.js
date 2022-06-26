@@ -81,16 +81,17 @@ const UpdateInventoryDetails = () => {
                 <form onSubmit={submitHandler}> 
                     <div className="form1">
                             <img className="image" src={UpdateImage}/>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="productname">Productname</label>
                                 <input 
                                     type="text" 
                                     name="productname"
                                     value={form.productname}
                                     required
-                                    placeholder="Productname..."
                                     onChange={changeHandler} />
                             </div>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="description">Description</label>
                                 <textarea 
                                     type="text" 
                                     name="description"
@@ -99,26 +100,27 @@ const UpdateInventoryDetails = () => {
                                     value={form.description}
                                     onChange={changeHandler} />
                             </div>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="price">Price</label>
                                 <input 
                                     type="price" 
                                     name="price"
-                                    placeholder="Price..."
                                     required
                                     value={form.price}
                                     onChange={changeHandler} />
                             </div> 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="quantity">Quantity</label>
                                 <input 
                                     type="text" 
                                     name="quantity"
-                                    placeholder="Quantity..."
                                     required 
                                     value={form.quantity}
                                     onChange={changeHandler} />
                             </div> 
 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="category">Category</label>
                                 <select
                                     name="category"
                                     value={form.category}

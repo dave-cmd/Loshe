@@ -99,25 +99,26 @@ const CreateStore = ({ isAuthorized, userID }) => {
 
     const managerForm = 
                     <div className="form1">
-                        <div className="inp">
+                        <div className="input-wrapper">
+                            <label for=""firstname2>Manager 2 Firstname</label>
                             <input 
                                 type="text" 
                                 name="firstname2"
-                                placeholder="Second manager's firstname..." 
                                 required
                                 value={form.firstname2}
                                 onChange={changeHandler} />
                         </div>
-                        <div className="inp">
+                        <div className="input-wrapper">
+                            <label for="lastname2">Manager 2 Lastname</label>
                             <input 
                                 type="text" 
                                 name="lastname2"
-                                placeholder="Second manager's lastname..." 
                                 required
                                 value={form.lastname2}
                                 onChange={changeHandler} />
                         </div> 
-                        <div className="inp">
+                        <div className="input-wrapper">
+                            <label>Manager 2 Mobile</label>
                             <input 
                                 type="tel" 
                                 name="phone2"
@@ -126,33 +127,34 @@ const CreateStore = ({ isAuthorized, userID }) => {
                                 value={form.phone2}
                                 onChange={changeHandler} />
                         </div> 
-                        <div className="inp">
+                        <div className="input-wrapper">
+                            <label for="manager2email">Manager 2 Email</label>
                             <input 
                                 type="email" 
                                 name="email2"
-                                placeholder="Second manager's email" 
                                 required
                                 value={form.email2}
                                 onChange={changeHandler} />
                         </div>
-                        <div className="inp">
+                        <div className="input-wrapper">
+                            <label for="manager2password">Manager 2 Password</label>
                             <input 
                                 type="password" 
                                 name="password2"
-                                placeholder="Second manager's password" 
                                 required
                                 value={form.password2}
                                 onChange={changeHandler} />
                         </div> 
-                        <div className="inp">
-                                <select
-                                    name="permission2"
-                                    required
-                                    value={form.permission2}
-                                    onChange={changeHandler}>
-                                    <option value="">Select second manager's permissions ...</option>
-                                    <option value="Manager">Manager</option>
-                                </select>
+                        <div className="input-wrapper">
+                            <label for="manager2permissions">Mannager 2 Permissions</label>
+                            <select
+                                name="permission2"
+                                required
+                                value={form.permission2}
+                                onChange={changeHandler}>
+                                <option value="">Select second manager's permissions ...</option>
+                                <option value="Manager">Manager</option>
+                            </select>
                         </div>  
 
                     </div>
@@ -165,38 +167,38 @@ const CreateStore = ({ isAuthorized, userID }) => {
                     {count === 1 &&
                     (<div className="form1">
                             <img className="image" alt="form-deco" src={Create}/>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for='storename'>Storename</label>
                                 <input 
                                     type="text" 
                                     name="storename" 
                                     required
                                     value={form.storename}
-                                    placeholder="Store name..."
                                     onChange={changeHandler} />
                             </div>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="region">Region</label>
                                 <input 
                                     type="text" 
                                     name="region"
-                                    placeholder="Region..." 
                                     required
                                     value={form.region}
                                     onChange={changeHandler} />
                             </div>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="firstname">Firstname</label>
                                 <input 
                                     type="text" 
                                     name="firstname"
-                                    placeholder="Manager's firstname..." 
                                     required
                                     value={form.firstname}
                                     onChange={changeHandler} />
                             </div> 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="lastname">Lastname</label>
                                 <input 
                                     type="text" 
                                     name="lastname"
-                                    placeholder="Manager's lastname..." 
                                     required
                                     value={form.lastname}
                                     onChange={changeHandler} />
@@ -208,35 +210,36 @@ const CreateStore = ({ isAuthorized, userID }) => {
                     {count === 2 &&
                     (<div className="form1">
                             <img className="image" src={Manager}/>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="mobile">Mobile</label>
                                 <input 
                                     type="tel" 
                                     name="phone"
-                                    placeholder="Manager's phone..." 
                                     required
                                     value={form.phone}
                                     onChange={changeHandler} />
                             </div> 
 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="email">Email</label>
                                 <input 
                                     type="email" 
                                     name="email" 
                                     required
                                     value={form.email}
-                                    placeholder="Manager's email..."
                                     onChange={changeHandler} />
                             </div>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="password">Password</label>
                                 <input 
                                     type="text" 
-                                    name="password"
-                                    placeholder="Manager's password..." 
+                                    name="password" 
                                     required
                                     value={form.password}
                                     onChange={changeHandler} />
                             </div> 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="permissions">Permissions</label>
                                 <select
                                     name="permission"
                                     required

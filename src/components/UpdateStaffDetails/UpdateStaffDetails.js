@@ -100,7 +100,8 @@ const UpdateStaffDetails = () => {
                 <form onSubmit={submitHandler}> 
                     <div className="form1">
                             <img className="image" src={UpdateImage}/>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="firstname">Firstname</label>
                                 <input 
                                     type="text" 
                                     name="firstname"
@@ -109,7 +110,8 @@ const UpdateStaffDetails = () => {
                                     placeholder="Firstname..."
                                     onChange={changeHandler} />
                             </div>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="lastname">Lastname</label>
                                 <input 
                                     type="text" 
                                     name="lastname"
@@ -118,7 +120,8 @@ const UpdateStaffDetails = () => {
                                     value={form.lastname}
                                     onChange={changeHandler} />
                             </div>
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="email">Email</label>
                                 <input 
                                     type="email" 
                                     name="email"
@@ -127,7 +130,8 @@ const UpdateStaffDetails = () => {
                                     value={form.email}
                                     onChange={changeHandler} />
                             </div> 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="phone">Mobile No.</label>
                                 <input 
                                     type="tel" 
                                     name="phone"
@@ -137,7 +141,8 @@ const UpdateStaffDetails = () => {
                                     onChange={changeHandler} />
                             </div> 
 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="password">Password</label>
                                 <input 
                                     type="password" 
                                     name="password"
@@ -145,7 +150,8 @@ const UpdateStaffDetails = () => {
                                     value={form.password}
                                     onChange={changeHandler} />
                             </div> 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="store">Store</label>
                                 <input 
                                     type="text" 
                                     name="store"
@@ -153,7 +159,8 @@ const UpdateStaffDetails = () => {
                                     value={form.store}
                                     onChange={changeHandler} />
                             </div> 
-                            <div className="inp">
+                            <div className="input-wrapper">
+                                <label for="role">Role</label>
                                 <select
                                     name="role"
                                     value={form.role}

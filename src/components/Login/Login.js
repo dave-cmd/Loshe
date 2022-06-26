@@ -60,25 +60,25 @@ const Login = ({setToken, setIsAuthorized, setUserID}) => {
         {visible.login === true &&   <div className="login-wrapper">
                 <h1>Login</h1> 
                 <form onSubmit={submitHandler} className="login-form">
-                    <label>
-                        {/* <p>Email</p> */}
+
+                    <div class="input-wrapper">
+                        <label for="email">Email</label>
                         <input type="email"
-                            
                             className="login-inputs" 
                             onChange={changeHandler}
                             name="email"
-                            placeholder="Email"
                             value={loginForm.email}/>
-                    </label>
-                    <label>
-                        {/* <p>Password</p> */}
-                        <input type="password" onChange={changeHandler}
-                            required
-                            className="login-inputs"
+                    </div>
+
+                    <div class="input-wrapper">
+                        <label for="password">Password</label>
+                        <input type="password"
+                            className="login-inputs" 
+                            onChange={changeHandler}
                             name="password"
-                            placeholder="Password"
-                            value={loginForm.password} />
-                    </label>
+                            value={loginForm.password}/>
+                    </div>
+
                     <div className="buttons">
                         <button type="submit" className="action update">Login</button>
                         <button type="submit" className="action update" onClick={toggleForms}>Register</button>

@@ -1,6 +1,8 @@
 import "./CreateInventory.css"
 import { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import Inventory1 from "./Inventory1.png"
+import Inventory2 from "./Inventory2.png"
 
 const CreateInventory = ({ isAuthorized, userID }) => {
     //Get credentials from session
@@ -75,17 +77,20 @@ const CreateInventory = ({ isAuthorized, userID }) => {
         <form onSubmit={submitHandler}>
             {count === 1 &&
             (<div className="form1">
-                    {/* <img className="image" src={Create}/> */}
-                    <div className="inp">
-                        <input 
-                            type="text" 
-                            name="productname" 
-                            required
-                            placeholder="Product name..."
-                            value={form.productname}
-                            onChange={changeHandler} />
+                    <img className="image" alt="form-deco" src={Inventory1}/>
+                    <div class="input-wrapper">
+                        <label for="productname">Productname</label>
+                        <input type="email"
+                            className="login-inputs" 
+                            onChange={changeHandler}
+                            name="productname"
+                            value={form.productname}/>
                     </div>
-                    <div className="inp">
+
+                    
+
+                    <div className="input-wrapper">
+                        <label for="description">Description</label>
                         <textarea 
                             type="text" 
                             name="description"
@@ -99,26 +104,29 @@ const CreateInventory = ({ isAuthorized, userID }) => {
 
             {count === 2 &&
             (<div className="form1">
-                    {/* <img className="image" src={Manager}/> */}
-                    <div className="inp">
+                    <img className="image" alt="form-deco" src={Inventory2}/>
+                    <div class="input-wrapper">
+                        <label for="price">Price</label>
                         <input 
                             type="number"
                             name="price" 
                             required
-                            placeholder="Price..."
                             value={form.price}
                             onChange={changeHandler} />
                     </div>
-                    <div className="inp">
+
+                    <div class="input-wrapper">
+                        <label for="quantity">Quantity</label>
                         <input 
                             type="number" 
                             name="quantity"
-                            placeholder="Quantity..." 
                             required
                             value={form.quantity}
                             onChange={changeHandler} />
-                    </div> 
-                    <div className="inp">
+                    </div>
+
+                    <div class="input-wrapper">
+                        <label for="category">Category</label>
                         <select
                             name="category"
                             value={form.category}
@@ -127,12 +135,13 @@ const CreateInventory = ({ isAuthorized, userID }) => {
                             <option value="Apparrel & Accessories">Apparrel & Accessories</option>
                             <option value="Style & Fashion">Style & Fashion</option>
                             <option value="Sports">Sports</option>
+                            <option value="Pets & Pet Supplies">Pets & Pet Supplies</option>
                             <option value="Medical health">Medical health</option>
                             <option value="Foods & Beverages">Food & Beverages</option>
-                            <option value="Electronics">Electronics</option>
-
+                            <option value="Consumer Electronics">Consumer Electronics</option>
+                            <option value="Children & Infants">Children & Infants</option>
                         </select>
-                    </div> 
+                    </div>
 
             </div>) }
             

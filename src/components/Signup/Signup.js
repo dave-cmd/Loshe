@@ -50,64 +50,72 @@ const Signup = (props) => {
         <div className="signup-wrapper">
                 <h1>SignUp</h1> 
                 <form onSubmit={submitHandler} className="signup-form">
-                <label>
-                        {/* <p>Firstname</p> */}
+
+                <div class="input-wrapper">
+                        <label for="firstname">Firstname</label>
                         <input type="text"
                             className="signup-inputs"
                             required 
                             onChange={changeHandler}
                             name="firstname"
-                            placeholder="Firstname"
                             value={signupForm.firstname}/>
-                    </label>
-                    <label>
-                        {/* <p>Lastname</p> */}
+
+                </div>
+
+                <div class="input-wrapper">
+                        <label for="lastname">Lastname</label>
                         <input type="text"
                             className="signup-inputs"
                             required 
                             onChange={changeHandler}
                             name="lastname"
-                            placeholder="Lastname"
                             value={signupForm.lastname}/>
-                    </label>
-                    <label>
-                        {/* <p>Email</p> */}
-                        <input type="email"
+                            
+                </div>
+
+                <div class="input-wrapper">
+                        <label for="email">Email</label>
+                        <input type="text"
                             className="signup-inputs"
                             required 
                             onChange={changeHandler}
                             name="email"
-                            placeholder="Email"
                             value={signupForm.email}/>
-                    </label>
-                    <label>
-                        {/* <p>Phone</p> */}
-                        <input type="tel"
+                            
+                </div>
+
+                <div class="input-wrapper">
+                        <label for="mobile no">Mobile No.</label>
+                        <input type="text"
                             className="signup-inputs"
                             required 
                             onChange={changeHandler}
                             name="phone"
-                            placeholder="+254722 222 222"
+                            placeholder="0721111111"
                             value={signupForm.phone}/>
-                    </label>
-                    <label>
-                        {/* <p>Password</p> */}
+                            
+                </div>
+
+                <div class="input-wrapper">
+                        <label for="password">Password</label>
                         <input type="password"
                             className="signup-inputs" onChange={changeHandler}
                             required
                             name="password"
-                            placeholder="Password"
                             value={signupForm.password} />
-                    </label>
-                    <label>
-                        {/* <p>Confirm Password</p> */}
+                            
+                </div>
+
+                <div class="input-wrapper">
+                        <label for="password2">Repeat Password</label>
                         <input type="password"
                             className="signup-inputs" onChange={changeHandler}
                             required
                             name="password2"
-                            placeholder="Confirm password"
                             value={signupForm.password2} />
-                    </label>
+                            
+                </div>
+
                     <div className="buttons">
                         <button type="submit" className="action update" onClick={props.toggleForms}>Login</button>
                         <button type="submit" className="action update">Register</button>
