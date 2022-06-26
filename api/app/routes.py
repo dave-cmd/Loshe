@@ -67,11 +67,11 @@ def login():
             })
         else:
             return jsonify({
-                "token_invalid" : ""
+                "Error" : f"Credentials for {json_data['email']} are invalid."
             })
     else:
         return jsonify({
-        "user": "This user does not exist!"
+        "Error": f"User {json_data['email']} does not exist!"
         })
 
 #Create user/ Signup
@@ -79,16 +79,18 @@ def login():
 def signup():
 
     if request.method == 'POST':
+        #Get from data
         json_data = request.get_json()
-        # print(json_data["email"])
+        print(json_data)
+
+        #check if users exist with form email or phone number
         user_email = User.query.filter_by(email=json_data["email"].strip()).first()
-        user_phone = User.query.filter_by(phone=json_data["phone"].strip()).first()
-        # print(user)
+        user_phone = User.query.filter_by(phone=json_data.get("phone").strip()).first()
 
         if user_phone != None or user_email != None:
             print("A user with the same credentials exists!")
             return jsonify({
-                "Error": "User with this email already exists!"
+                "Error": "User with this email or already exists!"
             })
 
         else:
@@ -100,6 +102,12 @@ def signup():
             )
             #Set the owner of admin user to 1000
             post_user.owner = 1000
+
+            #check if the password and confirm password match
+            if json_data["password"] != json_data['password2']:
+                return jsonify({
+                    "Error": "The passwords do not match."
+                })
             post_user.set_password(json_data["password"].strip())
 
             #Set Super/Admin

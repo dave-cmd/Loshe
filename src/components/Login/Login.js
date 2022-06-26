@@ -2,6 +2,7 @@ import "./Login.css"
 import {useState} from 'react'
 import PropTypes from 'prop-types';
 import Signup from "../Signup/Signup";
+import FlashMessage from 'react-flash-message'
 
 const Login = ({setToken, setIsAuthorized, setUserID}) => {
 
@@ -9,6 +10,8 @@ const Login = ({setToken, setIsAuthorized, setUserID}) => {
         email : "",
         password : ""
     })
+
+    const [flash, setFlash] =  useState(null)
 
     const[visible, setVisible]=useState({
         login : true,
@@ -45,6 +48,12 @@ const Login = ({setToken, setIsAuthorized, setUserID}) => {
                 email:"",
                 password:""
             })
+
+            if(data.Error){
+                console.log(data.Error)
+                setFlash(null)
+                setFlash(data.Error)
+            }
         })
         .catch(err=>{
             console.log(err.message)
@@ -58,7 +67,12 @@ const Login = ({setToken, setIsAuthorized, setUserID}) => {
     return (
         <>
         {visible.login === true &&   <div className="login-wrapper">
-                <h1>Login</h1> 
+                <h1>Login</h1>
+
+                {flash &&<FlashMessage duration={5000}>
+                    <div className="flash">{flash}</div>
+                </FlashMessage> }
+                
                 <form onSubmit={submitHandler} className="login-form">
 
                     <div class="input-wrapper">

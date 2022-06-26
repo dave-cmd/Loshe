@@ -31,6 +31,16 @@
     padding: 0 5px;
     font-size:  12px;
   }
+
+  .flash {
+    color: red;
+    background-color: rgba(255,0,0, 0.1);
+    border-radius: 2px;
+    width: 300px;
+    font-size: small;
+    text-align: center;
+    padding: 3px;
+  }
 /* 
 label {
     width: 100%;

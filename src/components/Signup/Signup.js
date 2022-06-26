@@ -1,5 +1,6 @@
 import "./Signup.css"
 import {useState} from 'react'
+import FlashMessage from 'react-flash-message'
 
 const Signup = (props) => {
 
@@ -11,6 +12,8 @@ const Signup = (props) => {
         password : "",
         password2 : ""
     })
+
+    const[flashRegister, setFlashRegister] = useState(null)
 
     const changeHandler = (event)=>{
         const name  = event.target.name
@@ -29,6 +32,8 @@ const Signup = (props) => {
             body: JSON.stringify(signupForm)
         }). then(res=>{
             if(!res.ok){
+                setFlashRegister(null)
+                setFlashRegister("An error occured in the registration route.")
                 throw Error("Error occured in the registration route.")
             }
             else{
@@ -37,84 +42,99 @@ const Signup = (props) => {
         })
         .then(data=>{
             setSignupForm({
-                email:"",
-                password:""
+                firstname: "",
+                lastname: "",
+                email : "",
+                phone : "",
+                password : "",
+                password2 : "",
             })
-            props.toggleForms()
+            if(data.Error){
+                setFlashRegister(null)
+                setFlashRegister(data.Error)
+                console.log(data.Error)
+            }
+            else{
+                props.toggleForms()
+            }
         })
         .catch(err=>{
-            console.log(err.message)
+            console.log(JSON.stringify(err.message))
         })
     }
     return (
         <div className="signup-wrapper">
-                <h1>SignUp</h1> 
+                <h1>SignUp</h1>
+                
+                {flashRegister &&<FlashMessage duration={5000}>
+                    <div className="flash">{flashRegister}</div>
+                </FlashMessage> }
+
                 <form onSubmit={submitHandler} className="signup-form">
+                    <div class="input-wrapper">
+                            <label for="firstname">Firstname</label>
+                            <input type="text"
+                                className="signup-inputs"
+                                required 
+                                onChange={changeHandler}
+                                name="firstname"
+                                value={signupForm.firstname}/>
 
-                <div class="input-wrapper">
-                        <label for="firstname">Firstname</label>
-                        <input type="text"
-                            className="signup-inputs"
-                            required 
-                            onChange={changeHandler}
-                            name="firstname"
-                            value={signupForm.firstname}/>
+                    </div>
 
-                </div>
+                    <div class="input-wrapper">
+                            <label for="lastname">Lastname</label>
+                            <input type="text"
+                                className="signup-inputs"
+                                required 
+                                onChange={changeHandler}
+                                name="lastname"
+                                value={signupForm.lastname}/>
+                                
+                    </div>
 
-                <div class="input-wrapper">
-                        <label for="lastname">Lastname</label>
-                        <input type="text"
-                            className="signup-inputs"
-                            required 
-                            onChange={changeHandler}
-                            name="lastname"
-                            value={signupForm.lastname}/>
-                            
-                </div>
+                    <div class="input-wrapper">
+                            <label for="email">Email</label>
+                            <input type="text"
+                                className="signup-inputs"
+                                required 
+                                onChange={changeHandler}
+                                name="email"
+                                value={signupForm.email}/>
+                                
+                    </div>
 
-                <div class="input-wrapper">
-                        <label for="email">Email</label>
-                        <input type="text"
-                            className="signup-inputs"
-                            required 
-                            onChange={changeHandler}
-                            name="email"
-                            value={signupForm.email}/>
-                            
-                </div>
+                    <div class="input-wrapper">
+                            <label for="phone">Phone Number</label>
+                            <input type="text"
+                                className="signup-inputs" 
+                                onChange={changeHandler}
+                                required
+                                name="phone"
+                                value={signupForm.phone} />
+                                
+                    </div>
 
-                <div class="input-wrapper">
-                        <label for="mobile no">Mobile No.</label>
-                        <input type="text"
-                            className="signup-inputs"
-                            required 
-                            onChange={changeHandler}
-                            name="phone"
-                            placeholder="0721111111"
-                            value={signupForm.phone}/>
-                            
-                </div>
+                    <div class="input-wrapper">
+                            <label for="password">Password</label>
+                            <input type="password"
+                                className="signup-inputs" 
+                                onChange={changeHandler}
+                                required
+                                name="password"
+                                value={signupForm.password} />
+                                
+                    </div>
 
-                <div class="input-wrapper">
-                        <label for="password">Password</label>
-                        <input type="password"
-                            className="signup-inputs" onChange={changeHandler}
-                            required
-                            name="password"
-                            value={signupForm.password} />
-                            
-                </div>
-
-                <div class="input-wrapper">
-                        <label for="password2">Repeat Password</label>
-                        <input type="password"
-                            className="signup-inputs" onChange={changeHandler}
-                            required
-                            name="password2"
-                            value={signupForm.password2} />
-                            
-                </div>
+                    <div class="input-wrapper">
+                            <label for="password2">Repeat Password</label>
+                            <input type="password"
+                                className="signup-inputs" onChange={changeHandler}
+                                required
+                                name="password2"
+                                value={signupForm.password2} />
+                                
+                    </div>
 
                     <div className="buttons">
                         <button type="submit" className="action update" onClick={props.toggleForms}>Login</button>
