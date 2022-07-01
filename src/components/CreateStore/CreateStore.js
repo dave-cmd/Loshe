@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./CreateStore.css"
 import Create from "./Create.png"
 import Manager from "./Manager.png"
+import FlashMessage from 'react-flash-message'
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const CreateStore = ({ isAuthorized, userID }) => {
@@ -13,6 +14,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
     const[page, setPage] = useState(2)
     const[addManager, setAddManager] = useState(false)
     const[count, setCount] = useState(1);
+    const[flashCreateStore, setFlashCreateStore] = useState(null)
     const[form, setForm] = useState({
         storename: "",
         region: "",
@@ -86,9 +88,16 @@ const CreateStore = ({ isAuthorized, userID }) => {
                 permission: "",
                 permission2: ""
             });
+
+            //Check if errors exist
             
+            if(data.Error) {
+                setFlashCreateStore(data.Error)
+            }
+            else {     
             //Redirect
             history.push("/getStores")
+            }
 
         })
         .catch(e=>{
@@ -163,12 +172,17 @@ const CreateStore = ({ isAuthorized, userID }) => {
                 {object.role !== "Admin" && <div>Unauthorized user</div>}
                 { object.role === "Admin" && <div className="wrapper-create-store">
                 <h2 className="main-title">Create Store</h2>
+
+                {flashCreateStore &&<FlashMessage duration={5000}>
+                    <div className="flash">{flashCreateStore}</div>
+                </FlashMessage> }
+
                 <form onSubmit={submitHandler}> 
                     {count === 1 &&
                     (<div className="form1">
                             <img className="image" alt="form-deco" src={Create}/>
                             <div className="input-wrapper">
-                                <label for='storename'>Storename</label>
+                                <label htmlFor='storename'>Storename</label>
                                 <input 
                                     type="text" 
                                     name="storename" 
@@ -177,7 +191,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                                     onChange={changeHandler} />
                             </div>
                             <div className="input-wrapper">
-                                <label for="region">Region</label>
+                                <label htmlFor="region">Region</label>
                                 <input 
                                     type="text" 
                                     name="region"
@@ -186,7 +200,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                                     onChange={changeHandler} />
                             </div>
                             <div className="input-wrapper">
-                                <label for="firstname">Firstname</label>
+                                <label htmlFor="firstname">Firstname</label>
                                 <input 
                                     type="text" 
                                     name="firstname"
@@ -195,7 +209,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                                     onChange={changeHandler} />
                             </div> 
                             <div className="input-wrapper">
-                                <label for="lastname">Lastname</label>
+                                <label htmlFor="lastname">Lastname</label>
                                 <input 
                                     type="text" 
                                     name="lastname"
@@ -211,7 +225,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                     (<div className="form1">
                             <img className="image" src={Manager}/>
                             <div className="input-wrapper">
-                                <label for="mobile">Mobile</label>
+                                <label htmlFor="mobile">Mobile</label>
                                 <input 
                                     type="tel" 
                                     name="phone"
@@ -221,7 +235,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                             </div> 
 
                             <div className="input-wrapper">
-                                <label for="email">Email</label>
+                                <label htmlFor="email">Email</label>
                                 <input 
                                     type="email" 
                                     name="email" 
@@ -230,7 +244,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                                     onChange={changeHandler} />
                             </div>
                             <div className="input-wrapper">
-                                <label for="password">Password</label>
+                                <label htmlFor="password">Password</label>
                                 <input 
                                     type="text" 
                                     name="password" 
@@ -239,7 +253,7 @@ const CreateStore = ({ isAuthorized, userID }) => {
                                     onChange={changeHandler} />
                             </div> 
                             <div className="input-wrapper">
-                                <label for="permissions">Permissions</label>
+                                <label htmlFor="permissions">Permissions</label>
                                 <select
                                     name="permission"
                                     required

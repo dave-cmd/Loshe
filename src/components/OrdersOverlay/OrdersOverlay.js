@@ -3,11 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { useState } from "react"
 
-const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dateConverter, store, owner, orderID})=>{
-
+const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, comment, dateConverter, store, owner, orderID})=>{
     //Set posting
     const[posting, setPosting] = useState(false)
     const[postingError, setPostingError] = useState(false)
+
+    //Form data
+    const[overlayForm, setOverlayForm] = useState({
+        "declineComment": "",
+    })
 
     //Logged in user
     const object = JSON.parse(sessionStorage.getItem('token'))
@@ -47,6 +51,47 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
         })
     }
 
+    //Decline order
+    const declineOrder = (event)=>{
+
+        event.preventDefault()
+        //Send update based on payload
+        let payload = {}
+
+        if(status === 'Pending'){
+            payload.status =  'Declined'
+            payload = {...payload, ...overlayForm}
+            console.log(payload)
+        }
+
+        fetch("/api/updateOrder/" + orderID, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        })
+        .then(res=>{
+            if(!res.ok){
+                throw Error("An error occured in updating the order...")
+            }
+            return res.json()
+        })
+        .then(data=>{
+            onClose()
+            setPosting(false)
+            setOverlayForm("")
+        })
+        .catch(error=>{
+            console.log(error.message)
+            setPostingError(true)
+        })
+    }
+
+    //Changehandler
+    const changeHandler = (event)=>{
+        const name  = event.target.name
+        const value = event.target.value
+        setOverlayForm({...overlayForm, [name]:value})
+    }
    
     if (!open) return null
 
@@ -77,8 +122,32 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
                         <div className="bold visual">Status:</div>
                         <div>{status}</div>
                     </div>
+
+                    {comment && <div className="order-details font">
+                        <div className="bold visual">Comment:</div>
+                        <div>{comment}</div>
+                    </div>}
+
+                    {object.id === owner && status === "Pending" && 
+                    <form id="ovelayFormID">
+                        <div className="input-wrapper">
+                            <label htmlFor="decline_comment">Decline reason</label>
+                            <input type="text"
+                                className="login-inputs" 
+                                onChange={changeHandler}
+                                name="declineComment"
+                                value={overlayForm.declineComment}/>
+                        </div>
+                        
+                    </form>
+                    }
+
+
                     <div className="modal-buttons-section">
-                        {object.id === owner && status === "Pending" && <button className="modal-buttons" onClick={updateOrder}>Approve</button>}
+                        {object.id === owner && status === "Pending" && <div className="appove-decline-buttons">
+                                <button className="modal-buttons" onClick={updateOrder}>Approve</button>
+                                <button className="modal-buttons decline" onClick={declineOrder} type="submit"  form="ovelayFormID">Decline</button>
+                            </div>}
                         {object.role === "Manager" && status === "Pending" && <button disabled className="modal-buttons">Awaiting approval..</button>}
                         {/* {object.id === store.user_id && status === "Pending" && <button disabled className="modal-buttons">Awaiting approval..</button>} */}
 
@@ -89,6 +158,10 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, dat
                         {/* {object.id === store.user_id && status === "Delivered" && <button disabled className="modal-buttons">Delivered</button>} */}
                         {object.role === "Manager" && status === "Delivered" && <button disabled className="modal-buttons">Delivered</button>}
                         {object.id === store.owner && status === "Delivered" && <button disabled className="modal-buttons">Delivered</button>}
+
+                        {/* {object.id === store.user_id && status === "Delivered" && <button disabled className="modal-buttons">Delivered</button>} */}
+                        {object.role === "Manager" && status === "Declined" && <button disabled className="modal-buttons">Declined</button>}
+                        {object.id === store.owner && status === "Declined" && <button disabled className="modal-buttons">Declined</button>}
                         
                     </div>
     

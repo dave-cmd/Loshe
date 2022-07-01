@@ -48,3 +48,6 @@ htmlcov/
 .coverage
 .coverage.*
 *,cover
+
+# Ignore pycache file
+__pycache__/

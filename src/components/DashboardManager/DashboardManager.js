@@ -56,6 +56,7 @@ const DashboardManager = () => {
                          status={order.status}
                          store_id={order.store_id}
                          orderID={order.id}
+                         comment={order.comment}
                          product_id = {order.product_id}/>
                          })
 
@@ -87,7 +88,6 @@ const DashboardManager = () => {
             return res.json()
         })
         .then(data=>{
-            // console.log(data);
             setDisplayDeleteOverlay(false);
             history.push("/getStores")
         })
@@ -120,8 +120,8 @@ const DashboardManager = () => {
                            deleteStaff={deleteStaff}
                            deleteError={deleteError}
                            setDeleteError={setDeleteError}/> */}
-            { data.length === 0 && error === null  && <div className="status">Fetching resource...</div>}
-            { isFetching=== false && Object.keys(data).length > 0 && error === null && 
+            { data.length === 0 && error === null  && <div className="status">Fetching...</div>}
+            { isFetching === false && Object.keys(data).length > 0 && error === null && 
                 (<>
                     <div className="name-section">
                         {storeIcon}

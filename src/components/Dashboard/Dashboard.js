@@ -27,6 +27,7 @@ const Dashboard = ({isAuthorized, userID})=>{
                                 store_id={order.store_id}
                                 orderID={order.id}
                                 owner={order.owner}
+                                comment={order.comment}
                                 product_id = {order.product_id}
                 />)
     })

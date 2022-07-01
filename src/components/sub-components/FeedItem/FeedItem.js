@@ -43,6 +43,7 @@ const FeedItem = (props) => {
                            dateConverter={dateConverter}
                            quantity={props.quantity}
                            status={props.status}
+                           comment={props.comment}
                            orderID={props.orderID}
                            owner={props.owner}
                            product={product}></OrdersOverlay>

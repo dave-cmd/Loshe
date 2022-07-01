@@ -87,6 +87,7 @@ class Order(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     quantity = db.Column(db.BigInteger(), index=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    comment = db.Column(db.String(128), index=True, nullable=True)
     owner = db.Column(db.Integer(), index=True, nullable=True)
     status= db.Column(db.String(128), index=True, nullable=True, default="Pending")
     updated_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)

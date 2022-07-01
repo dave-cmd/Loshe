@@ -75,8 +75,8 @@ const Login = ({setToken, setIsAuthorized, setUserID}) => {
                 
                 <form onSubmit={submitHandler} className="login-form">
 
-                    <div class="input-wrapper">
-                        <label for="email">Email</label>
+                    <div className="input-wrapper">
+                        <label htmlFor="email">Email</label>
                         <input type="email"
                             className="login-inputs" 
                             onChange={changeHandler}
@@ -84,8 +84,8 @@ const Login = ({setToken, setIsAuthorized, setUserID}) => {
                             value={loginForm.email}/>
                     </div>
 
-                    <div class="input-wrapper">
-                        <label for="password">Password</label>
+                    <div className="input-wrapper">
+                        <label htmlFor="password">Password</label>
                         <input type="password"
                             className="login-inputs" 
                             onChange={changeHandler}

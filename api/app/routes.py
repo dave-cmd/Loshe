@@ -1119,18 +1119,18 @@ def updateOrder(id):
     if request.method == 'PATCH':
         #Get form data
         form_data = request.get_json()
-
         #Create an order instance
         order = Order.query.get(id)
-
+        print(form_data)
         #Update order instance with form data
         if order!= None:
             order.status = form_data['status'].strip()
+            order.comment = form_data['declineComment'].strip()
             order.updated_at = datetime.utcnow()
 
 
-        #Commit changes to database
-        db.session.commit()
+            #Commit changes to database
+            db.session.commit()
    
         return jsonify({
             "updateOrder": 200

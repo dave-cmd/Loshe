@@ -49,9 +49,9 @@
 }
 
 .status-Pending {
-    background-color: rgba(220,88,42, 0.3);
+    background-color: rgba(140, 20, 252, 0.1);
     border: none;
-    color: rgba(220,88,42, 1);
+    color: rgba(140, 20, 252, 1);
     padding: 8px 16px;
     text-align: center;
     text-decoration: none;
@@ -80,6 +80,21 @@
     background-color: rgba(0, 0, 0, 0.2);
     border: none;
     color: rgba(0, 0, 0, 1);
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+
+.status-Declined{
+    background-color: rgba(220,88,42, 0.3);
+    border: none;
+    color: rgba(220,88,42, 1);
     padding: 8px 16px;
     text-align: center;
     text-decoration: none;

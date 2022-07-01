@@ -78,8 +78,8 @@ const CreateInventory = ({ isAuthorized, userID }) => {
             {count === 1 &&
             (<div className="form1">
                     <img className="image" alt="form-deco" src={Inventory1}/>
-                    <div class="input-wrapper">
-                        <label for="productname">Productname</label>
+                    <div className="input-wrapper">
+                        <label htmlFor="productname">Productname</label>
                         <input type="email"
                             className="login-inputs" 
                             onChange={changeHandler}
@@ -87,10 +87,9 @@ const CreateInventory = ({ isAuthorized, userID }) => {
                             value={form.productname}/>
                     </div>
 
-                    
 
                     <div className="input-wrapper">
-                        <label for="description">Description</label>
+                        <label htmlFor="description">Description</label>
                         <textarea 
                             type="text" 
                             name="description"
@@ -105,8 +104,8 @@ const CreateInventory = ({ isAuthorized, userID }) => {
             {count === 2 &&
             (<div className="form1">
                     <img className="image" alt="form-deco" src={Inventory2}/>
-                    <div class="input-wrapper">
-                        <label for="price">Price</label>
+                    <div className="input-wrapper">
+                        <label htmlFor="price">Price</label>
                         <input 
                             type="number"
                             name="price" 
@@ -115,8 +114,8 @@ const CreateInventory = ({ isAuthorized, userID }) => {
                             onChange={changeHandler} />
                     </div>
 
-                    <div class="input-wrapper">
-                        <label for="quantity">Quantity</label>
+                    <div className="input-wrapper">
+                        <label htmlFor="quantity">Quantity</label>
                         <input 
                             type="number" 
                             name="quantity"
@@ -125,8 +124,8 @@ const CreateInventory = ({ isAuthorized, userID }) => {
                             onChange={changeHandler} />
                     </div>
 
-                    <div class="input-wrapper">
-                        <label for="category">Category</label>
+                    <div className="input-wrapper">
+                        <label htmlFor="category">Category</label>
                         <select
                             name="category"
                             value={form.category}

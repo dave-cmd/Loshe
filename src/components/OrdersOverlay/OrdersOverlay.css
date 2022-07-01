@@ -6,7 +6,7 @@
     transform: translate(calc(50vw - 50%), calc(50vh - 50%));
     z-index: 10;
     width: 40%;
-    height: 30%;
+    height: 37%;
     background-color: #FFF;
     border-radius: 3px;
 
@@ -67,6 +67,16 @@
 
 .visual {
     color: rgba(0,0,0,0.5);
+}
+
+.appove-decline-buttons{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.decline {
+    background-color: rgba(255,0,0,0.1);
+    color: rgba(255, 0, 0, 1)
 }
 
 @media screen and (max-width:500px) {
