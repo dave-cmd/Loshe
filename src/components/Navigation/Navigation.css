@@ -5,6 +5,7 @@
     height: 50px;
     padding: 20px;
     background-color: #58E5EE;
+    position: relative;
 }
 
 .nav-title {
@@ -34,6 +35,100 @@
     opacity: 0.5;
 }
 
+.notifications {
+    width: 40%;
+    position: absolute;
+    top: 90px;
+    right: 5px;
+    background-color: white;
+    color: black;
+    font-weight: 300;
+
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+.icon {
+    margin-right: 15px;
+    cursor: pointer;
+    position: relative;
+}
+
+.iconImg {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+.counter {
+    color: white;
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+.nButton {
+    width: 100px;
+    font-size: 12px;
+    padding: 5px;
+    margin-top: 10px;
+    background-color: #58E5EE;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nButton:hover {
+    color: rgba(255, 255, 255, 0.6); 
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.notification-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.emptyNotifications {
+    font-size: 12px;
+}
+
+.notificationItem {
+    width: 94%;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    padding: 10px;
+    
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.notification-time {
+    font-size: 12px;
+    padding: 10px;
+}
+
 @media screen and (max-width: 500px) {
     .links {
         display: none;
@@ -44,6 +139,29 @@
     }
     .navigation-wrapper{
         height: 20px;
+    }
+
+    .nButton {
+        width: 70px;
+        font-size: 8px;
+    }
+
+    .emptyNotifications {
+        font-size: 8px;
+    }
+
+    .notifications {
+        top: 60px;
+        width: 80%;
+    }
+
+    .notificationItem {
+        font-size: 8px;
+    }
+
+    .notification-time {
+        font-size: 8px;
+        padding: 5px;
     }
 }
 

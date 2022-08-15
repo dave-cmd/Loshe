@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import Login from "../Login/Login"
@@ -22,9 +22,18 @@ import Request from "../Request/Request";
 import InventoryAlmostOut from "../InventoryAlmostOut/InventoryAlmostOut";
 import InventoryStore from "../InventoryStore/InventoryStore"
 import Sale from "../Sale/Sale";
+import { io } from 'socket.io-client';
 
 function App() {
   const {token, setToken} = useToken()
+
+  //Socket initialization
+  const [socket, setSocket] = useState(null)
+
+  useEffect(()=>{
+    setSocket(io("http://localhost:5001"));
+
+  },[]);
  
   //Set authorization
   const [isAuthorized, setIsAuthorized] = useState(false)
@@ -67,6 +76,7 @@ function App() {
               setToken={setToken}
               toggleHamburger={toggleHamburger}
               logout={logout}
+              socket={socket}
               isAuthorized = {isAuthorized} />
           <Overlay visible={menuVisible}
                   toggleHamburger={toggleHamburger}
@@ -76,6 +86,7 @@ function App() {
             <Route path="/" exact>
               <Dashboard  isAuthorized={isAuthorized}
                           userID={userID}
+                          socket={socket}
               />
             </Route>
             <Route path="/createStore">
@@ -120,7 +131,7 @@ function App() {
               <UpdateStoreDetails />
             </Route>
             <Route path="/request">
-              <Request />
+              <Request socket={socket}/>
             </Route>
             <Route path="/sale">
               <Sale />

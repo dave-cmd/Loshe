@@ -2,7 +2,7 @@ import "./Request.css"
 import RequestItem from "../sub-components/RequestItem/RequestItem";
 import useFetch from "../hooks/useFetch";
 
-const Request = () => {
+const Request = ({socket}) => {
 
     //Current user object
     const object = JSON.parse(sessionStorage.getItem('token'))
@@ -18,6 +18,7 @@ const Request = () => {
                              location={prod.location}
                              quantity={prod.quantity}
                              owner={prod.owner}
+                             socket={socket}
                              /> 
     })
 

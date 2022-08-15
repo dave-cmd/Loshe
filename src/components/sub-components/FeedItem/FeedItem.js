@@ -46,7 +46,8 @@ const FeedItem = (props) => {
                            comment={props.comment}
                            orderID={props.orderID}
                            owner={props.owner}
-                           product={product}></OrdersOverlay>
+                           product={product}
+                           socket={props.socket}></OrdersOverlay>
             
             <div className="feed-item" onClick={()=>{setIsOpen(true)}}>
 

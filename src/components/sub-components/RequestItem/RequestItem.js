@@ -12,6 +12,22 @@ const RequestItem = (props) => {
 
     const object = JSON.parse(sessionStorage.getItem('token'))
 
+    //Get storename
+    const [storename, setStorename] = useState(null)
+
+    useEffect(()=>{
+        fetch(`/api/store/${object.store}`)
+        .then(res=>{
+            if(!res.ok){
+                throw Error("An error occured getting store by ID from [RequestItem.js] component...")
+            }
+            return res.json()
+        })
+        .then(data=>{
+            setStorename(data.storename)
+        })
+    },[])
+
     //Post checker
     const[posting, setPosting] = useState(false)
 
@@ -114,6 +130,17 @@ const RequestItem = (props) => {
         .then(data=>{
             console.log(data)
             setPosting(false)
+
+            // Send notification
+            // Send notification to server [Manager User]
+            props.socket.emit("sendNotification",{
+                "senderName": object.id,
+                "receiverName": object.owner,
+                "orderStatus": {"status":"Pending","declineComment":"None"},
+                "storename": storename? storename : object.store,
+                "datetime": Date().toLocaleString()
+            });
+
             history.push("/")
         })
         .catch(error=>{

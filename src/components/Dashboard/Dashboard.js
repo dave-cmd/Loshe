@@ -1,4 +1,5 @@
 import "./Dashboard.css"
+import { useEffect } from "react";
 import DashBoardItem from "../sub-components/DashboardItem/DashBoardItem";
 import FeedItem from "../sub-components/FeedItem/FeedItem"
 import useFetch from "../hooks/useFetch"
@@ -6,10 +7,16 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import DashboardManager from "../DashboardManager/DashboardManager";
 
 
-const Dashboard = ({isAuthorized, userID})=>{
+
+const Dashboard = ({isAuthorized, userID, socket})=>{
 
     //Get id from session storage
     const object  = JSON.parse(sessionStorage.getItem("token"))
+
+    //User socket connection
+    useEffect(()=>{
+        socket?.emit("newUser", object.id )
+      },[socket, object])
 
     //Initialize useHistory
     const history = useHistory()
@@ -29,6 +36,7 @@ const Dashboard = ({isAuthorized, userID})=>{
                                 owner={order.owner}
                                 comment={order.comment}
                                 product_id = {order.product_id}
+                                socket={socket}
                 />)
     })
 
@@ -72,7 +80,7 @@ const Dashboard = ({isAuthorized, userID})=>{
 
     return ( 
         <>
-        {object.role !== "Admin" && <DashboardManager userID={userID} />}
+        {object.role !== "Admin" && <DashboardManager userID={userID} socket={socket} />}
         {object.role === "Admin" && <div className="wrapper-staff-details">
             <div className="name-section">
                 <h1 className="staff-title">Admin Dashboard</h1>
@@ -86,7 +94,7 @@ const Dashboard = ({isAuthorized, userID})=>{
 
             <div className="action-section">Recent Activity</div>
 
-            <div className="feed-section height">
+            <div className="feed-section-dash">
                 {orders.length === 0 && <div className="orders-font">Orders currently unavailable.</div>}
                 {feedItems}
             </div>

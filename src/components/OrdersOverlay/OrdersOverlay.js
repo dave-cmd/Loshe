@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { useState } from "react"
 
-const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, comment, dateConverter, store, owner, orderID})=>{
+const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, comment, dateConverter, store, owner, orderID, socket})=>{
+
     //Set posting
     const[posting, setPosting] = useState(false)
     const[postingError, setPostingError] = useState(false)
@@ -22,13 +23,15 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, com
     //Update Order
     const updateOrder = ()=>{
         //Send update based on payload
-        const payload = {}
+        let payload = {}
         if(status === 'Pending'){
             payload.status =  'Approved'
         }
         else if(status === 'Approved'){
             payload.status = 'Delivered'
         }
+
+        payload = {...payload, ...{"declineComment": "None"}}
 
         fetch("/api/updateOrder/" + orderID, {
             method: 'PATCH',
@@ -44,10 +47,35 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, com
         .then(data=>{
             onClose()
             setPosting(false)
+            
+            if( object.role === 'Admin') {
+                // Send notification to server [Admin User]
+                socket.emit("sendNotification",{
+                    "senderName": object.id,
+                    "receiverName": store.users,
+                    "orderStatus": payload,
+                    "storename": store.storename,
+                    "datetime": new Date().toLocaleString()
+                });
+            }
+            
+            else {
+                // Send notification to server [Manager User]
+                socket.emit("sendNotification",{
+                    "senderName": object.id,
+                    "receiverName": object.owner,
+                    "orderStatus": payload,
+                    "storename": store.storename,
+                    "datetime": Date().toLocaleString()
+                });
+            }
+    
         })
         .catch(error=>{
             console.log(error.message)
             setPostingError(true)
+
+
         })
     }
 
@@ -61,7 +89,7 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, com
         if(status === 'Pending'){
             payload.status =  'Declined'
             payload = {...payload, ...overlayForm}
-            console.log(payload)
+            
         }
 
         fetch("/api/updateOrder/" + orderID, {
@@ -79,6 +107,29 @@ const OrdersOverlay = ({open, onClose, product, quantity, timestamp, status, com
             onClose()
             setPosting(false)
             setOverlayForm("")
+
+            if( object.role === 'Admin') {
+                // Send notification to server [Admin User]
+                socket.emit("sendNotification",{
+                    "senderName": object.id,
+                    "receiverName": store.users,
+                    "orderStatus": payload,
+                    "storename": store.storename,
+                    "datetime": new Date().toLocaleString()
+                });
+            }
+
+            else {
+                // Send notification to server [Manager User]
+                socket.emit("sendNotification",{
+                    "senderName": object.id,
+                    "receiverName": object.owner,
+                    "orderStatus": payload,
+                    "storename": store.storename,
+                    "datetime": new Date().toLocaleString()
+                });
+            }
+    
         })
         .catch(error=>{
             console.log(error.message)

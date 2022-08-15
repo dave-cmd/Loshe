@@ -2,15 +2,20 @@ import "./DashboardManager.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faPhone, faAt, faStore, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import DeleteOverlay from "../DeleteOverlay/DeleteOverlay";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import FeedItem from "../sub-components/FeedItem/FeedItem";
 import useFetch from "../hooks/useFetch";
 
 
-const DashboardManager = () => {
+const DashboardManager = ({socket}) => {
     //Get id from session storage
     const object  = JSON.parse(sessionStorage.getItem("token"))
+    
+    //User socket connection
+    useEffect(()=>{
+        socket?.emit("newUser", object.id )
+      },[socket, object])
     
     // const{data, error, isFetching} = useFetch('/api/storeByManager/' + object.id)
     const{data, error, isFetching} = useFetch('/api/getStoreId/' + object.store)
@@ -57,7 +62,8 @@ const DashboardManager = () => {
                          store_id={order.store_id}
                          orderID={order.id}
                          comment={order.comment}
-                         product_id = {order.product_id}/>
+                         product_id = {order.product_id}
+                         socket={socket}/>
                          })
 
 
@@ -120,7 +126,7 @@ const DashboardManager = () => {
                            deleteStaff={deleteStaff}
                            deleteError={deleteError}
                            setDeleteError={setDeleteError}/> */}
-            { data.length === 0 && error === null  && <div className="status">Fetching...</div>}
+            { data.length === 0 && error === null  && <div className="status">No data ...</div>}
             { isFetching === false && Object.keys(data).length > 0 && error === null && 
                 (<>
                     <div className="name-section">
